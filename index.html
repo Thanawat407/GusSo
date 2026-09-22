@@ -128,7 +128,6 @@
     <!-- VIEW 2: หลังบ้าน (Admin Management Panel)  -->
     <!-- ========================================== -->
     <section id="viewAdmin" class="hidden">
-      <!-- หัวข้อหลังบ้าน และแท็บสลับเมนูย่อย -->
       <div class="bg-white rounded-3xl p-6 border border-brand-200 shadow-sm mb-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
           <div class="flex items-center gap-2">
@@ -342,7 +341,6 @@
     <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl relative max-h-[90vh] overflow-y-auto">
       <button onclick="closeBookDetail()" class="absolute top-5 right-5 text-slate-400 hover:text-slate-600 text-2xl leading-none">&times;</button>
       <div class="flex items-start gap-4 pb-4 border-b border-slate-100">
-        <!-- รูปภาพปกหนังสือในหน้าต่างรายละเอียด -->
         <img id="detailBookCover" src="" alt="Cover" class="w-24 h-36 object-cover rounded-xl shrink-0 border border-brand-200 shadow-md">
         <div>
           <span id="detailCategory" class="text-[11px] px-2.5 py-0.5 bg-brand-50 text-brand-600 rounded-full font-medium">หมวดหมู่</span>
@@ -389,7 +387,13 @@
             <label class="block text-xs font-semibold text-slate-600">รหัสผ่าน</label>
             <a href="javascript:switchAuthMode('forgot')" class="text-[11px] text-brand-600 hover:underline">ลืมรหัสผ่าน?</a>
           </div>
-          <input type="password" id="loginPassword" required placeholder="••••••••" class="w-full px-3.5 py-2 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-brand-400 focus:outline-none">
+          <!-- ช่องรหัสผ่าน พร้อมปุ่มเปิด/ปิดดูรหัส -->
+          <div class="relative">
+            <input type="password" id="loginPassword" required placeholder="••••••••" class="w-full px-3.5 py-2 pr-10 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-brand-400 focus:outline-none">
+            <button type="button" onclick="togglePasswordVisibility('loginPassword', 'eyeIconLogin')" class="absolute right-3 top-2.5 text-slate-400 hover:text-slate-600 text-sm focus:outline-none">
+              <span id="eyeIconLogin">👁️</span>
+            </button>
+          </div>
         </div>
         <div class="flex items-center">
           <input type="checkbox" id="loginRemember" class="w-4 h-4 text-brand-500 rounded border-slate-300 focus:ring-brand-400">
@@ -411,7 +415,13 @@
         </div>
         <div>
           <label class="block text-xs font-semibold text-slate-600 mb-1">รหัสผ่านที่บันทึก</label>
-          <input type="password" id="regPassword" required placeholder="ตั้งรหัสผ่าน 6 ตัวขึ้นไป" minlength="6" class="w-full px-3.5 py-2 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-brand-400 focus:outline-none">
+          <!-- ช่องรหัสผ่านสมัครสมาชิก พร้อมปุ่มเปิด/ปิดดูรหัส -->
+          <div class="relative">
+            <input type="password" id="regPassword" required placeholder="ตั้งรหัสผ่าน 6 ตัวขึ้นไป" minlength="6" class="w-full px-3.5 py-2 pr-10 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-brand-400 focus:outline-none">
+            <button type="button" onclick="togglePasswordVisibility('regPassword', 'eyeIconReg')" class="absolute right-3 top-2.5 text-slate-400 hover:text-slate-600 text-sm focus:outline-none">
+              <span id="eyeIconReg">👁️</span>
+            </button>
+          </div>
         </div>
         <div class="flex items-start">
           <input type="checkbox" id="regConsent" required class="w-4 h-4 mt-0.5 text-brand-500 rounded border-slate-300 focus:ring-brand-400">
@@ -506,7 +516,20 @@
   <!-- JAVASCRIPT LOGIC                           -->
   <!-- ========================================== -->
   <script>
-    // 0. User Data & Authentication (เฉพาะ admin@gusso.com เท่านั้นที่เห็นหลังบ้าน)
+    // ฟังก์ชันเปิด/ปิดแสดงรหัสผ่าน
+    function togglePasswordVisibility(inputId, iconId) {
+      const input = document.getElementById(inputId);
+      const icon = document.getElementById(iconId);
+      if (input.type === 'password') {
+        input.type = 'text';
+        icon.innerText = '🙈';
+      } else {
+        input.type = 'password';
+        icon.innerText = '👁️';
+      }
+    }
+
+    // 0. User Data & Authentication
     const STORAGE_KEY_USERS = 'gusso_users_db';
     const STORAGE_KEY_SESSION = 'gusso_current_session';
 
@@ -566,7 +589,6 @@
         document.getElementById('currentUserLabel').innerText = user.name;
         document.getElementById('currentEmailLabel').innerText = user.email;
 
-        // แสดงแถบเมนูหลังบ้านเฉพาะเมื่อเป็นบัญชีแอดมิน
         if (isAdminUser(user)) {
           adminNavContainer.classList.remove('hidden');
           adminNavContainer.classList.add('flex');
@@ -698,7 +720,7 @@
 
       emailjs.send('service_5t8qqtj', 'template_1ln8ve7', templateParams)
         .then(function(response) {
-          alert(`ส่งอีเมลสำเร็จแล้ว!\nระบบได้ส่งลิงก์รีเซ็ตรหัสผ่านไปยัง: ${userEmail}\n(สามารถคลิกเปิดลิงก์จากมือถือหรืออุปกรณ์ใดก็ได้)`);
+          alert(`ส่งอีเมลสำเร็จแล้ว!\nระบบได้ส่งลิงก์รีเซ็ตรหัสผ่านไปยัง: ${userEmail}`);
           closeAuthModal();
           document.getElementById('formForgot').reset();
         })
@@ -770,74 +792,14 @@
         : "px-4 py-2 rounded-xl text-xs font-bold text-slate-600 hover:text-brand-600 transition";
     }
 
-    // 1. ข้อมูลหนังสือ GusSo E-Book Store (ผูกกับรูปภาพจริงตรงปก 100%)
+    // 1. หนังสือ
     let books = [
-      { 
-        id: 1, 
-        title: 'ผจญภัยในแดนเวทมนตร์ เล่มหนึ่ง', 
-        author: 'ภานุวัฒน์ แสงอรุณ', 
-        category: 'วรรณกรรมและนิยาย', 
-        price: 199.00, 
-        available: true,
-        cover: 'images/magic1.jpg',
-        synopsis: 'เรื่องราวของเด็กหนุ่มผู้ค้นพบว่าตัวเองมีสายเลือดและพลังเวทมนตร์โบราณที่สาบสูญ เขาต้องออกเดินทางข้ามดินแดนมหัศจรรย์เข้าสู่สถาบันเวทมนตร์เพื่อฝึกฝนและหยุดยั้งเงามืดที่กำลังคืบคลานเข้าสู่โลกแห่งเวทมนตร์ ผสมผสานมิตรภาพ ความลี้ลับ และการต่อสู้สุดตื่นเต้น',
-        highlights: ['การผจญภัยในโลกเวทมนตร์แฟนตาซีที่เปิดโลกจินตนาการ', 'การพัฒนาพลังเวทมนตร์และความสัมพันธ์ของผองเพื่อน', 'ปริศนาคทาเวทและศิลาแห่งเวทมนตร์โบราณ']
-      },
-      { 
-        id: 2, 
-        title: 'พลังแห่งนิสัยเล็กๆ อะตอมิก ไลฟ์', 
-        author: 'กรกช ชัยสิทธิ์', 
-        category: 'จิตวิทยาและพัฒนาตนเอง', 
-        price: 250.00, 
-        available: true,
-        cover: 'images/atomic.jpg',
-        synopsis: 'หนังสือพัฒนาตนเองระดับโลกที่อธิบายหลักการทางจิตวิทยาและประสาทวิทยาว่าทำไมการเปลี่ยนแปลงเพียง 1% ในแต่ละวัน จึงสามารถสร้างผลลัพธ์มหาศาลให้กับชีวิต การงาน และความสุขในระยะยาว พร้อมสูตร 4 ขั้นตอนในการสร้างนิสัยที่ดีและทำลายนิสัยแย่ๆ อย่างถาวร',
-        highlights: ['กฎ 4 ข้อของการสร้างพฤติกรรมใหม่ให้ทำได้จริงและยั่งยืน', 'เทคนิคการออกแบบสภาพแวดล้อมเพื่อควบคุมสมาธิและลดการผลัดวันประกันพรุ่ง', 'กรณีศึกษาจริงและวิธีสร้างระบบชีวิตเพื่อความสำเร็จในระยะยาว']
-      },
-      { 
-        id: 3, 
-        title: 'เรียนรู้ SQL ศูนย์สู่โปร', 
-        author: 'กรกช ชัยสิทธิ์', 
-        category: 'เทคโนโลยีและคอมพิวเตอร์', 
-        price: 350.00, 
-        available: true,
-        cover: 'images/sql.jpg',
-        synopsis: 'คู่มือฉบับสมบูรณ์สำหรับผู้เริ่มต้นและนักพัฒนาที่ต้องการเชี่ยวชาญการจัดการฐานข้อมูลเชิงสัมพันธ์ ครอบคลุมตั้งแต่คำสั่งพื้นฐาน DDL, DML, การออกแบบ Schema ให้อยู่ในรูป Normalization 3NF ไปจนถึงการเขียน Query ขั้นสูง เช่น Window Functions, Subqueries และ Index Optimization',
-        highlights: ['ปูพื้นฐาน SQL DDL / DML และ Relational Database ครบถ้วน', 'เจาะลึก 1NF, 2NF, 3NF ป้องกันข้อมูลซ้ำซ้อนอย่างเป็นระบบ', 'แบบฝึกหัดจริงสำหรับการทำรายงานยอดขายและ Business Analytics']
-      },
-      { 
-        id: 4, 
-        title: 'จิตวิทยาการลงทุนในยุค AI', 
-        author: 'กรกช ชัยสิทธิ์', 
-        category: 'การเงินและการลงทุน', 
-        price: 290.00, 
-        available: true,
-        cover: 'images/invest.jpg',
-        synopsis: 'ในยุคที่ตลาดการเงินขับเคลื่อนด้วยข้อมูลและปัญญาประดิษฐ์ สิ่งที่สร้างความได้เปรียบให้นักลงทุนไม่ใช่แค่ตัวเลข แต่คือ "การควบคุมอารมณ์และจิตวิทยา" หนังสือเล่มนี้จะช่วยให้คุณเข้าใจกับดักทางความคิด อคติการลงทุน และการวางแผนพอร์ตแบบ Passive เพื่ออิสรภาพทางการเงิน',
-        highlights: ['ทำความเข้าใจ Cognitive Bias และความกลัว/ความโลภในตลาดการเงิน', 'การใช้เทคโนโลยี AI เพื่อวิเคราะห์ข้อมูลโดยไม่ตกเป็นทาสของอารมณ์', 'กลยุทธ์ Asset Allocation สำหรับสร้างกระแสเงินสดและเติบโตอย่างมั่นคง']
-      },
-      { 
-        id: 5, 
-        title: 'ผจญภัยในแดนเวทมนตร์ เล่มสอง', 
-        author: 'กรกช ชัยสิทธิ์', 
-        category: 'วรรณกรรมและนิยาย', 
-        price: 219.00, 
-        available: true,
-        cover: 'images/magic2.jpg',
-        synopsis: 'ภาคต่อสุดเข้มข้นหลังจากจบภาคแรก เมื่อประตูมิติโบราณถูกเปิดออก สงครามระหว่างอาณาจักรเวทมนตร์จึงปะทุขึ้น การผจญภัยเพื่อตามหาผนึกมังกรและศาสตร์แห่งรูนโบราณจึงเริ่มต้นขึ้น พร้อมการเผชิญหน้ากับศัตรูที่ทรงพลังที่สุดในประวัติศาสตร์เวทมนตร์',
-        highlights: ['การขยายสเกลของโลกเวทมนตร์สู่ดินแดนใหม่และศาสตร์รูนโบราณ', 'เวทมนตร์ธาตุขั้นสูงและการต่อสู้เชิงกลยุทธ์', 'บทสรุปของมิตรภาพและชะตากรรมที่ต้องเลือก']
-      },
-      { 
-        id: 6, 
-        title: 'สร้างเว็บด้วย HTML & Modern CSS', 
-        author: 'กรกช ชัยสิทธิ์', 
-        category: 'เทคโนโลยีและคอมพิวเตอร์', 
-        price: 280.00, 
-        available: false,
-        cover: 'images/webdev.jpg',
-        synopsis: 'เรียนรู้การพัฒนาเว็บไซต์สมัยใหม่ตั้งแต่โครงสร้าง HTML5 Semantic, การจัดเลย์เอาต์ด้วย CSS Flexbox & Grid, การทำ Responsive Design ให้รองรับทุกหน้าจอ ไปจนถึงการประยุกต์ใช้ Tailwind CSS เพื่อสร้างเว็บแอปพลิเคชันที่สวยงามระดับมืออาชีพ',
-        highlights: ['โครงสร้าง HTML5 Semantic เพื่อ SEO และ Accessibility ที่ดี', 'เจาะลึก Flexbox และ CSS Grid พร้อม Workshop สร้างหน้าร้านออนไลน์', 'เทคนิค Modern CSS Animations และการปรับแต่งสไตล์อย่างรวดเร็ว']
-      }
+      { id: 1, title: 'ผจญภัยในแดนเวทมนตร์ เล่มหนึ่ง', author: 'ภานุวัฒน์ แสงอรุณ', category: 'วรรณกรรมและนิยาย', price: 199.00, available: true, cover: 'images/magic1.jpg', synopsis: 'เรื่องราวของเด็กหนุ่มผู้ค้นพบพลังเวทมนตร์โบราณ...', highlights: ['แฟนตาซี', 'เวทมนตร์'] },
+      { id: 2, title: 'พลังแห่งนิสัยเล็กๆ อะตอมิก ไลฟ์', author: 'กรกช ชัยสิทธิ์', category: 'จิตวิทยาและพัฒนาตนเอง', price: 250.00, available: true, cover: 'images/atomic.jpg', synopsis: 'การเปลี่ยนแปลง 1% ในแต่ละวัน...', highlights: ['สร้างนิสัย', 'พัฒนาตนเอง'] },
+      { id: 3, title: 'เรียนรู้ SQL ศูนย์สู่โปร', author: 'กรกช ชัยสิทธิ์', category: 'เทคโนโลยีและคอมพิวเตอร์', price: 350.00, available: true, cover: 'images/sql.jpg', synopsis: 'คู่มือ SQL และฐานข้อมูล...', highlights: ['Database', 'SQL'] },
+      { id: 4, title: 'จิตวิทยาการลงทุนในยุค AI', author: 'กรกช ชัยสิทธิ์', category: 'การเงินและการลงทุน', price: 290.00, available: true, cover: 'images/invest.jpg', synopsis: 'การลงทุนยุคปัญญาประดิษฐ์...', highlights: ['การลงทุน', 'AI'] },
+      { id: 5, title: 'ผจญภัยในแดนเวทมนตร์ เล่มสอง', author: 'กรกช ชัยสิทธิ์', category: 'วรรณกรรมและนิยาย', price: 219.00, available: true, cover: 'images/magic2.jpg', synopsis: 'ภาคต่อสุดเข้มข้น...', highlights: ['ผจญภัย', 'เวทมนตร์'] },
+      { id: 6, title: 'สร้างเว็บด้วย HTML & Modern CSS', author: 'กรกช ชัยสิทธิ์', category: 'เทคโนโลยีและคอมพิวเตอร์', price: 280.00, available: false, cover: 'images/webdev.jpg', synopsis: 'พัฒนาเว็บไซต์สมัยใหม่...', highlights: ['HTML/CSS', 'Web Dev'] }
     ];
 
     let cart = [];
@@ -857,9 +819,8 @@
       grid.innerHTML = filtered.map(b => `
         <div class="bg-white rounded-2xl p-4 border border-brand-200 shadow-sm flex flex-col justify-between hover:shadow-md transition">
           <div>
-            <!-- รูปภาพปกหนังสือจริง คมชัด จัดทรงสวยงาม -->
             <div class="h-60 w-full rounded-xl overflow-hidden mb-3 bg-slate-100 cursor-pointer border border-brand-100 shadow-sm" onclick="openBookDetail(${b.id})">
-              <img src="${b.cover}" alt="${b.title}" class="w-full h-full object-cover hover:scale-105 transition duration-300" onerror="this.src='https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=500'">
+              <img src="${b.cover}" alt="${b.title}" class="w-full h-full object-cover hover:scale-105 transition duration-300">
             </div>
             <span class="text-[11px] px-2.5 py-0.5 bg-brand-50 text-brand-600 rounded-full font-medium">${b.category}</span>
             <h4 class="font-bold text-sm sm:text-base mt-2 text-slate-800 line-clamp-1 cursor-pointer hover:text-brand-600" onclick="openBookDetail(${b.id})">${b.title}</h4>
@@ -880,21 +841,14 @@
     function openBookDetail(id) {
       const book = books.find(b => b.id === id);
       if (!book) return;
-
-      const modalCover = document.getElementById('detailBookCover');
-      if (modalCover) {
-        modalCover.src = book.cover;
-      }
-
+      document.getElementById('detailBookCover').src = book.cover;
       document.getElementById('detailCategory').innerText = book.category;
       document.getElementById('detailTitle').innerText = book.title;
       document.getElementById('detailAuthor').innerText = `ผู้แต่ง: ${book.author}`;
       document.getElementById('detailPrice').innerText = `฿${book.price.toFixed(2)}`;
       document.getElementById('detailSynopsis').innerText = book.synopsis;
-
-      const highlightsList = document.getElementById('detailHighlights');
-      highlightsList.innerHTML = book.highlights.map(h => `<li>${h}</li>`).join('');
-
+      document.getElementById('detailHighlights').innerHTML = book.highlights.map(h => `<li>${h}</li>`).join('');
+      
       const addBtn = document.getElementById('detailAddToCartBtn');
       if (book.available) {
         addBtn.disabled = false;
@@ -907,41 +861,23 @@
         addBtn.className = "flex-1 py-2.5 bg-slate-300 text-slate-500 rounded-xl text-xs font-semibold cursor-not-allowed";
         addBtn.onclick = null;
       }
-
       document.getElementById('bookDetailModal').classList.remove('hidden');
     }
 
-    function closeBookDetail() {
-      document.getElementById('bookDetailModal').classList.add('hidden');
-    }
-
+    function closeBookDetail() { document.getElementById('bookDetailModal').classList.add('hidden'); }
     function addToCart(id) {
       const book = books.find(b => b.id === id);
-      if (cart.find(c => c.id === id)) {
-        alert('หนังสือเล่มนี้อยู่ในตะกร้าแล้ว (E-book ซื้อ 1 เล่มต่อ 1 สมาชิก)');
-        return;
-      }
+      if (cart.find(c => c.id === id)) { alert('หนังสือเล่มนี้อยู่ในตะกร้าแล้ว'); return; }
       cart.push(book);
       updateCartUI();
     }
-
-    function removeFromCart(id) {
-      cart = cart.filter(c => c.id !== id);
-      updateCartUI();
-    }
-
+    function removeFromCart(id) { cart = cart.filter(c => c.id !== id); updateCartUI(); }
     function updateCartUI() {
       document.getElementById('cartBadge').innerText = cart.length;
       const list = document.getElementById('cartList');
       const total = cart.reduce((acc, cur) => acc + cur.price, 0);
-
       document.getElementById('cartTotal').innerText = `฿${total.toFixed(2)}`;
-
-      if (cart.length === 0) {
-        list.innerHTML = '<p class="text-center text-slate-400 py-10 text-sm">ยังไม่มีรายการหนังสือในตะกร้า</p>';
-        return;
-      }
-
+      if (cart.length === 0) { list.innerHTML = '<p class="text-center text-slate-400 py-10 text-sm">ยังไม่มีรายการหนังสือในตะกร้า</p>'; return; }
       list.innerHTML = cart.map(item => `
         <div class="flex justify-between items-center bg-brand-50/70 p-3 rounded-xl border border-brand-100">
           <div class="flex items-center gap-3">
@@ -955,43 +891,27 @@
         </div>
       `).join('');
     }
-
     function openCart() { document.getElementById('cartModal').classList.remove('hidden'); }
     function closeCart() { document.getElementById('cartModal').classList.add('hidden'); }
-
     function openCheckout() {
-      if (cart.length === 0) {
-        alert('กรุณาเลือกหนังสือลงตะกร้าก่อนทำรายการ');
-        return;
-      }
+      if (cart.length === 0) { alert('กรุณาเลือกหนังสือลงตะกร้าก่อนทำรายการ'); return; }
       const user = getCurrentUser();
-      if (!user) {
-        alert('กรุณาเข้าสู่ระบบ หรือ สมัครสมาชิก ก่อนทำการสั่งซื้อสินค้า');
-        openAuthModal('login');
-        return;
-      }
-
+      if (!user) { alert('กรุณาเข้าสู่ระบบก่อนทำการสั่งซื้อ'); openAuthModal('login'); return; }
       const total = cart.reduce((acc, cur) => acc + cur.price, 0);
       document.getElementById('payAmountLabel').innerText = `ยอดชำระ: ฿${total.toFixed(2)}`;
       checkoutItems = [...cart];
       closeCart();
       document.getElementById('checkoutModal').classList.remove('hidden');
     }
-
     function closeCheckout() { document.getElementById('checkoutModal').classList.add('hidden'); }
 
-    // ฟังก์ชันชำระเงินและยิงใบเสร็จจริง
     function confirmPayment() {
       closeCheckout();
       const user = getCurrentUser() || { name: 'ลูกค้าทั่วไป', email: 'guest@email.com' };
       const total = checkoutItems.reduce((acc, cur) => acc + cur.price, 0);
       const receiptNo = 'RCP-2026-' + Math.floor(1000 + Math.random() * 9000);
       const now = new Date().toLocaleString('th-TH');
-
-      const orderWithTokens = checkoutItems.map(item => ({
-        ...item,
-        token: '/download/token_' + Math.random().toString(36).substring(2, 8)
-      }));
+      const orderWithTokens = checkoutItems.map(item => ({ ...item, token: '/download/token_' + Math.random().toString(36).substring(2, 8) }));
 
       const itemsHtml = orderWithTokens.map(c => `
         <div style="margin-bottom: 12px;">
@@ -1001,406 +921,172 @@
               <td align="right" style="font-size: 13px; font-weight: bold; color: #0f172a;">฿${c.price.toFixed(2)}</td>
             </tr>
             <tr>
-              <td colspan="2" style="padding-top: 4px;">
-                <span style="display: inline-block; font-size: 10px; color: #0284c7; background: #e0f2fe; padding: 2px 8px; border-radius: 4px; font-family: monospace;">📥 ลิงก์ดาวน์โหลด: ${c.token}</span>
-              </td>
+              <td colspan="2" style="padding-top: 4px;"><span style="display: inline-block; font-size: 10px; color: #0284c7; background: #e0f2fe; padding: 2px 8px; border-radius: 4px; font-family: monospace;">📥 ลิงก์ดาวน์โหลด: ${c.token}</span></td>
             </tr>
           </table>
         </div>
       `).join('');
 
-      const receiptParams = {
-        email: user.email,
-        name: user.name,
-        receipt_no: receiptNo,
-        date: now,
-        items_html: itemsHtml,
-        total_price: `฿${total.toFixed(2)}`
-      };
-
-      emailjs.send('service_5t8qqtj', 'template_cudu5ko', receiptParams)
-        .then(function(response) {
-          console.log('ส่งใบเสร็จดีไซน์สวยเข้าอีเมลเรียบร้อย!');
-        })
-        .catch(function(error) {
-          console.error('ส่งใบเสร็จไม่สำเร็จ:', error);
-        });
+      emailjs.send('service_5t8qqtj', 'template_cudu5ko', { email: user.email, name: user.name, receipt_no: receiptNo, date: now, items_html: itemsHtml, total_price: `฿${total.toFixed(2)}` });
 
       document.getElementById('receiptNoticeEmail').innerText = `📧 ส่งใบเสร็จคำสั่งซื้อจริงไปยังอีเมล: ${user.email} แล้ว`;
-
-      const receiptHTML = `
+      document.getElementById('receiptContent').innerHTML = `
         <div class="border-b border-dashed border-slate-300 pb-2 mb-2">
           <div class="font-bold text-sm text-slate-800">ใบเสร็จรับเงินอิเล็กทรอนิกส์ (e-Receipt)</div>
-          <div><b>ร้าน GusSo E-Book Store</b></div>
-          <div>เลขที่ใบเสร็จ: ${receiptNo}</div>
-          <div>วันที่: ${now}</div>
+          <div>เลขที่: ${receiptNo} | วันที่: ${now}</div>
           <div>ผู้ซื้อ: ${user.name} (${user.email})</div>
-          <div class="text-[11px] text-emerald-600 font-semibold mt-1">✓ ชำระเงินเรียบร้อยแล้ว (เตรียมจัดส่ง)</div>
+          <div class="text-[11px] text-emerald-600 font-semibold mt-1">✓ ชำระเงินเรียบร้อยแล้ว</div>
         </div>
         <div class="py-2 border-b border-dashed border-slate-300 space-y-2">
-          ${orderWithTokens.map(c => `
-            <div>
-              <div class="flex justify-between font-medium">
-                <span>${c.title} (x1)</span>
-                <span class="font-semibold">฿${c.price.toFixed(2)}</span>
-              </div>
-              <div class="text-[10px] text-brand-600 font-mono">📥 ลิงก์ดาวน์โหลด: ${c.token}</div>
-            </div>
-          `).join('')}
+          ${orderWithTokens.map(c => `<div><div class="flex justify-between font-medium"><span>${c.title} (x1)</span><span>฿${c.price.toFixed(2)}</span></div><div class="text-[10px] text-brand-600 font-mono">📥 ลิงก์: ${c.token}</div></div>`).join('')}
         </div>
-        <div class="flex justify-between font-bold pt-2 text-sm text-slate-800">
-          <span>ยอดชำระทั้งสิ้น (PromptPay):</span>
-          <span class="text-brand-600">฿${total.toFixed(2)}</span>
-        </div>
+        <div class="flex justify-between font-bold pt-2 text-sm text-slate-800"><span>ยอดชำระทั้งสิ้น:</span><span class="text-brand-600">฿${total.toFixed(2)}</span></div>
       `;
-
-      document.getElementById('receiptContent').innerHTML = receiptHTML;
       cart = [];
       updateCartUI();
       document.getElementById('receiptModal').classList.remove('hidden');
     }
 
     function closeReceipt() { document.getElementById('receiptModal').classList.add('hidden'); }
-
     function toggleBookStatus(id) {
       const book = books.find(b => b.id === id);
-      if (book) {
-        book.available = !book.available;
-        renderAdmin();
-        renderBooks();
-      }
+      if (book) { book.available = !book.available; renderAdmin(); renderBooks(); }
     }
-
     function renderAdmin() {
-      const list = document.getElementById('adminBookList');
-      list.innerHTML = books.map(b => `
+      document.getElementById('adminBookList').innerHTML = books.map(b => `
         <tr class="hover:bg-brand-50/40">
-          <td class="p-4">
-            <img src="${b.cover}" class="w-10 h-14 object-cover rounded-lg border border-slate-200 shadow-sm">
-          </td>
+          <td class="p-4"><img src="${b.cover}" class="w-10 h-14 object-cover rounded-lg border border-slate-200 shadow-sm"></td>
           <td class="p-4 font-semibold text-slate-800">${b.title}</td>
           <td class="p-4 text-xs text-slate-500">${b.author}</td>
           <td class="p-4 text-slate-600">${b.category}</td>
           <td class="p-4 font-bold text-brand-600">฿${b.price.toFixed(2)}</td>
-          <td class="p-4">
-            <span class="px-2.5 py-1 text-xs rounded-full font-semibold ${b.available ? 'bg-emerald-100 text-emerald-700' : 'bg-rose-100 text-rose-700'}">
-              ${b.available ? 'พร้อมจำหน่าย' : 'สินค้าหมด'}
-            </span>
-          </td>
-          <td class="p-4 text-center">
-            <button onclick="toggleBookStatus(${b.id})" class="text-xs px-3 py-1.5 border border-slate-200 rounded-lg hover:bg-white shadow-sm font-medium transition">
-              สลับสถานะ
-            </button>
-          </td>
+          <td class="p-4"><span class="px-2.5 py-1 text-xs rounded-full font-semibold ${b.available ? 'bg-emerald-100 text-emerald-700' : 'bg-rose-100 text-rose-700'}">${b.available ? 'พร้อมจำหน่าย' : 'สินค้าหมด'}</span></td>
+          <td class="p-4 text-center"><button onclick="toggleBookStatus(${b.id})" class="text-xs px-3 py-1.5 border border-slate-200 rounded-lg hover:bg-white shadow-sm font-medium transition">สลับสถานะ</button></td>
         </tr>
       `).join('');
     }
 
-    // 2. CPU Scheduling Simulator Logic
-    const subjectList = [
-      'แบบฝึกหัด OS', 'รายงาน Database', 'สรุป English', 
-      'แบบฝึกหัด Math', 'โครงงาน Web Dev', 'ทดลอง Network',
-      'การบ้าน Data Structures', 'สรุปสถิติวิจัย'
-    ];
-
-    let currentSeed = 101;
-    let tasks = [];
-    let timeQuantum = 2;
-    let currentAlgoTab = 'fcfs';
-
+    // CPU Scheduling
+    const subjectList = ['แบบฝึกหัด OS', 'รายงาน Database', 'สรุป English', 'แบบฝึกหัด Math', 'โครงงาน Web Dev', 'ทดลอง Network', 'การบ้าน Data Structures', 'สรุปสถิติวิจัย'];
+    let currentSeed = 101, tasks = [], timeQuantum = 2, currentAlgoTab = 'fcfs', calculatedData = {};
+    
     function pseudoRandom(seed) {
       let value = seed;
-      return function() {
-        value = (value * 9301 + 49297) % 233280;
-        return value / 233280;
-      };
+      return function() { value = (value * 9301 + 49297) % 233280; return value / 233280; };
     }
-
     function generateRandomProblem(customSeed = null) {
-      if (customSeed !== null) {
-        currentSeed = customSeed;
-      } else {
-        currentSeed = Math.floor(Math.random() * 9000) + 1000;
-      }
+      currentSeed = customSeed !== null ? customSeed : Math.floor(Math.random() * 9000) + 1000;
       document.getElementById('inputSeed').value = currentSeed;
-
-      const rng = pseudoRandom(currentSeed);
-      const numTasks = parseInt(document.getElementById('selectNumTasks').value);
+      const rng = pseudoRandom(currentSeed), numTasks = parseInt(document.getElementById('selectNumTasks').value);
       timeQuantum = parseInt(document.getElementById('inputQuantum').value) || 2;
       document.getElementById('labelQ').innerText = timeQuantum;
-
       tasks = [];
-      const shuffledSubjects = [...subjectList].sort(() => rng() - 0.5);
-
+      const shuffled = [...subjectList].sort(() => rng() - 0.5);
       for (let i = 1; i <= numTasks; i++) {
-        let at = Math.floor(rng() * 11);
-        let bt = Math.floor(rng() * 8) + 1;
-        tasks.push({
-          id: `P${i}`,
-          name: shuffledSubjects[i - 1] || `วิชาเลือก ${i}`,
-          at: at,
-          bt: bt
-        });
+        tasks.push({ id: `P${i}`, name: shuffled[i-1], at: Math.floor(rng() * 11), bt: Math.floor(rng() * 8) + 1 });
       }
-
-      if (!tasks.some(t => t.at === 0)) {
-        tasks[0].at = 0;
-      }
-
+      if (!tasks.some(t => t.at === 0)) tasks[0].at = 0;
       renderTaskTable();
       calculateAllAlgorithms();
     }
-
     function loadBySeed() {
-      const seedVal = parseInt(document.getElementById('inputSeed').value);
-      if (isNaN(seedVal)) {
-        alert('กรุณากรอกตัวเลข Seed');
-        return;
-      }
-      generateRandomProblem(seedVal);
+      const v = parseInt(document.getElementById('inputSeed').value);
+      if (isNaN(v)) { alert('กรุณากรอก Seed'); return; }
+      generateRandomProblem(v);
     }
-
     function updateQuantum() {
       let q = parseInt(document.getElementById('inputQuantum').value);
-      if (isNaN(q) || q < 1 || q > 4) {
-        alert('Time Quantum (q) ต้องเป็นจำนวนเต็ม 1 ถึง 4 เท่านั้น');
-        document.getElementById('inputQuantum').value = timeQuantum;
-        return;
-      }
+      if (isNaN(q) || q < 1 || q > 4) { alert('Quantum 1-4 เท่านั้น'); document.getElementById('inputQuantum').value = timeQuantum; return; }
       timeQuantum = q;
       document.getElementById('labelQ').innerText = timeQuantum;
       calculateAllAlgorithms();
     }
-
     function renderTaskTable() {
-      const tbody = document.getElementById('taskTableBody');
-      tbody.innerHTML = tasks.map(t => `
-        <tr class="hover:bg-brand-50/40">
-          <td class="p-3 font-bold text-brand-600">${t.id}</td>
-          <td class="p-3 font-sans font-medium text-slate-800">${t.name}</td>
-          <td class="p-3">${t.at}</td>
-          <td class="p-3">${t.bt}</td>
-          <td class="p-3 font-sans text-slate-500">t0 + ${t.at} ชม.</td>
-        </tr>
-      `).join('');
+      document.getElementById('taskTableBody').innerHTML = tasks.map(t => `<tr class="hover:bg-brand-50/40"><td class="p-3 font-bold text-brand-600">${t.id}</td><td class="p-3 font-medium text-slate-800">${t.name}</td><td class="p-3">${t.at}</td><td class="p-3">${t.bt}</td><td class="p-3 text-slate-500">t0 + ${t.at} ชม.</td></tr>`).join('');
     }
-
     function runFCFS() {
-      let sorted = [...tasks].sort((a, b) => a.at - b.at || a.id.localeCompare(b.id, undefined, {numeric: true}));
-      let time = 0;
-      let gantt = [];
-      let results = [];
-
+      let sorted = [...tasks].sort((a,b) => a.at - b.at || a.id.localeCompare(b.id, undefined, {numeric: true})), time = 0, gantt = [], results = [];
       sorted.forEach(p => {
-        if (time < p.at) {
-          gantt.push({ id: 'Idle', start: time, end: p.at });
-          time = p.at;
-        }
-        let start = time;
-        time += p.bt;
-        let end = time;
-        gantt.push({ id: p.id, start: start, end: end });
-
-        let ct = end;
-        let tat = ct - p.at;
-        let wt = tat - p.bt;
+        if (time < p.at) { gantt.push({ id: 'Idle', start: time, end: p.at }); time = p.at; }
+        let start = time; time += p.bt; let end = time;
+        gantt.push({ id: p.id, start, end });
+        let ct = end, tat = ct - p.at, wt = tat - p.bt;
         results.push({ id: p.id, at: p.at, bt: p.bt, ct, tat, wt });
       });
-
       return { gantt, results };
     }
-
     function runSJF() {
-      let remaining = tasks.map(t => ({ ...t }));
-      let time = 0;
-      let gantt = [];
-      let results = [];
-
-      while (remaining.length > 0) {
-        let available = remaining.filter(p => p.at <= time);
-        if (available.length === 0) {
-          let nextArrival = Math.min(...remaining.map(p => p.at));
-          gantt.push({ id: 'Idle', start: time, end: nextArrival });
-          time = nextArrival;
-          continue;
-        }
-
-        available.sort((a, b) => a.bt - b.bt || a.at - b.at || a.id.localeCompare(b.id, undefined, {numeric: true}));
-        let chosen = available[0];
-
-        let start = time;
-        time += chosen.bt;
-        let end = time;
-
-        gantt.push({ id: chosen.id, start: start, end: end });
-
-        let ct = end;
-        let tat = ct - chosen.at;
-        let wt = tat - chosen.bt;
+      let rem = tasks.map(t => ({...t})), time = 0, gantt = [], results = [];
+      while (rem.length > 0) {
+        let avail = rem.filter(p => p.at <= time);
+        if (avail.length === 0) { let nextA = Math.min(...rem.map(p => p.at)); gantt.push({ id: 'Idle', start: time, end: nextA }); time = nextA; continue; }
+        avail.sort((a,b) => a.bt - b.bt || a.at - b.at || a.id.localeCompare(b.id, undefined, {numeric: true}));
+        let chosen = avail[0], start = time; time += chosen.bt; let end = time;
+        gantt.push({ id: chosen.id, start, end });
+        let ct = end, tat = ct - chosen.at, wt = tat - chosen.bt;
         results.push({ id: chosen.id, at: chosen.at, bt: chosen.bt, ct, tat, wt });
-
-        remaining = remaining.filter(p => p.id !== chosen.id);
+        rem = rem.filter(p => p.id !== chosen.id);
       }
-
       return { gantt, results };
     }
-
     function runRoundRobin(q) {
-      let pool = tasks.map(t => ({ ...t, remainingBT: t.bt }));
-      let time = 0;
-      let queue = [];
-      let gantt = [];
-      let completed = [];
-
-      pool.filter(t => t.at <= time).sort((a,b) => a.id.localeCompare(b.id, undefined, {numeric: true})).forEach(t => queue.push(t));
-
+      let pool = tasks.map(t => ({...t, remainingBT: t.bt})), time = 0, queue = [], gantt = [], completed = [];
+      pool.filter(t => t.at <= time).forEach(t => queue.push(t));
       while (completed.length < tasks.length) {
         if (queue.length === 0) {
           let unarrived = pool.filter(p => !completed.some(c => c.id === p.id));
           if (unarrived.length > 0) {
-            let nextArrival = Math.min(...unarrived.map(p => p.at));
-            gantt.push({ id: 'Idle', start: time, end: nextArrival });
-            time = nextArrival;
-            pool.filter(t => t.at <= time && !completed.some(c => c.id === t.id) && !queue.some(q => q.id === t.id))
-                .sort((a,b) => a.at - b.at || a.id.localeCompare(b.id, undefined, {numeric: true}))
-                .forEach(t => queue.push(t));
+            let nextA = Math.min(...unarrived.map(p => p.at));
+            gantt.push({ id: 'Idle', start: time, end: nextA }); time = nextA;
+            pool.filter(t => t.at <= time && !completed.some(c => c.id === t.id) && !queue.some(qi => qi.id === t.id)).forEach(t => queue.push(t));
             continue;
-          } else {
-            break;
-          }
+          } else { break; }
         }
-
-        let current = queue.shift();
-        let runTime = Math.min(current.remainingBT, q);
-        let start = time;
-        time += runTime;
-        let end = time;
-        current.remainingBT -= runTime;
-
-        gantt.push({ id: current.id, start: start, end: end });
-
-        let newlyArrived = pool.filter(t => 
-          t.at > start && t.at <= time && 
-          t.id !== current.id && 
-          !queue.some(qi => qi.id === t.id) && 
-          !completed.some(c => c.id === t.id)
-        ).sort((a,b) => a.at - b.at || a.id.localeCompare(b.id, undefined, {numeric: true}));
-
-        newlyArrived.forEach(na => queue.push(na));
-
-        if (current.remainingBT > 0) {
-          queue.push(current);
-        } else {
-          let ct = end;
-          let tat = ct - current.at;
-          let wt = tat - current.bt;
-          completed.push({ id: current.id, at: current.at, bt: current.bt, ct, tat, wt });
-        }
+        let current = queue.shift(), runT = Math.min(current.remainingBT, q), start = time; time += runT; let end = time;
+        current.remainingBT -= runT;
+        gantt.push({ id: current.id, start, end });
+        pool.filter(t => t.at > start && t.at <= time && t.id !== current.id && !queue.some(qi => qi.id === t.id) && !completed.some(c => c.id === t.id)).forEach(na => queue.push(na));
+        if (current.remainingBT > 0) { queue.push(current); }
+        else { let ct = end, tat = ct - current.at, wt = tat - current.bt; completed.push({ id: current.id, at: current.at, bt: current.bt, ct, tat, wt }); }
       }
-
       return { gantt, results: completed };
     }
-
-    let calculatedData = {};
-
     function calculateAllAlgorithms() {
       calculatedData.fcfs = runFCFS();
       calculatedData.sjf = runSJF();
       calculatedData.rr = runRoundRobin(timeQuantum);
-
       updateComparison();
       renderSelectedAlgorithm();
     }
-
     function switchAlgoTab(algo) {
       currentAlgoTab = algo;
       document.getElementById('tabBtnFCFS').className = "px-4 py-1.5 rounded-xl text-xs font-bold " + (algo === 'fcfs' ? "bg-brand-500 text-white shadow-sm" : "bg-white text-slate-600 hover:text-brand-600");
       document.getElementById('tabBtnSJF').className = "px-4 py-1.5 rounded-xl text-xs font-bold " + (algo === 'sjf' ? "bg-brand-500 text-white shadow-sm" : "bg-white text-slate-600 hover:text-brand-600");
       document.getElementById('tabBtnRR').className = "px-4 py-1.5 rounded-xl text-xs font-bold " + (algo === 'rr' ? "bg-brand-500 text-white shadow-sm" : "bg-white text-slate-600 hover:text-brand-600");
-
       renderSelectedAlgorithm();
     }
-
     function renderSelectedAlgorithm() {
       const data = calculatedData[currentAlgoTab];
-      const header = document.getElementById('algoHeader');
-      
-      let titles = {
-        fcfs: 'ผลลัพธ์: First-Come, First-Served (FCFS)',
-        sjf: 'ผลลัพธ์: Shortest Job First (SJF - Non-preemptive)',
-        rr: `ผลลัพธ์: Round Robin (Time Quantum q = ${timeQuantum})`
-      };
-      header.innerHTML = `<h4 class="font-bold text-slate-800 text-sm">${titles[currentAlgoTab]}</h4>`;
-
-      const chartEl = document.getElementById('ganttChart');
-      chartEl.innerHTML = data.gantt.map(block => `
-        <div class="flex flex-col items-center mr-1 mb-2">
-          <div class="h-10 px-3 flex items-center justify-center font-bold text-xs rounded-lg shadow-sm ${block.id === 'Idle' ? 'bg-slate-200 text-slate-500' : 'bg-brand-500 text-white'}">
-            ${block.id}
-          </div>
-          <div class="flex justify-between w-full text-[10px] text-slate-400 mt-1 px-0.5">
-            <span>${block.start}</span>
-            <span>${block.end}</span>
-          </div>
-        </div>
-      `).join('');
-
-      const tbody = document.getElementById('algoResultTable');
-      let sortedResults = [...data.results].sort((a,b) => a.id.localeCompare(b.id, undefined, {numeric: true}));
-
-      tbody.innerHTML = sortedResults.map(r => `
-        <tr class="hover:bg-slate-50">
-          <td class="p-3 font-bold text-brand-600">${r.id}</td>
-          <td class="p-3">${r.at}</td>
-          <td class="p-3">${r.bt}</td>
-          <td class="p-3 font-bold text-slate-800">${r.ct}</td>
-          <td class="p-3">${r.tat}</td>
-          <td class="p-3 font-bold text-emerald-600">${r.wt}</td>
-        </tr>
-      `).join('');
-
-      let totalTAT = sortedResults.reduce((acc, c) => acc + c.tat, 0);
-      let totalWT = sortedResults.reduce((acc, c) => acc + c.wt, 0);
-      let avgTAT = (totalTAT / sortedResults.length).toFixed(2);
-      let avgWT = (totalWT / sortedResults.length).toFixed(2);
-
-      document.getElementById('avgTATLabel').innerText = `${avgTAT} หน่วยเวลา`;
-      document.getElementById('avgWTLabel').innerText = `${avgWT} หน่วยเวลา`;
+      const titles = { fcfs: 'FCFS', sjf: 'SJF (Non-preemptive)', rr: `Round Robin (q = ${timeQuantum})` };
+      document.getElementById('algoHeader').innerHTML = `<h4 class="font-bold text-slate-800 text-sm">ผลลัพธ์: ${titles[currentAlgoTab]}</h4>`;
+      document.getElementById('ganttChart').innerHTML = data.gantt.map(b => `<div class="flex flex-col items-center mr-1 mb-2"><div class="h-10 px-3 flex items-center justify-center font-bold text-xs rounded-lg shadow-sm ${b.id === 'Idle' ? 'bg-slate-200 text-slate-500' : 'bg-brand-500 text-white'}">${b.id}</div><div class="flex justify-between w-full text-[10px] text-slate-400 mt-1 px-0.5"><span>${b.start}</span><span>${b.end}</span></div></div>`).join('');
+      let sorted = [...data.results].sort((a,b) => a.id.localeCompare(b.id, undefined, {numeric: true}));
+      document.getElementById('algoResultTable').innerHTML = sorted.map(r => `<tr class="hover:bg-slate-50"><td class="p-3 font-bold text-brand-600">${r.id}</td><td class="p-3">${r.at}</td><td class="p-3">${r.bt}</td><td class="p-3 font-bold text-slate-800">${r.ct}</td><td class="p-3">${r.tat}</td><td class="p-3 font-bold text-emerald-600">${r.wt}</td></tr>`).join('');
+      document.getElementById('avgTATLabel').innerText = `${(sorted.reduce((a,c)=>a+c.tat,0)/sorted.length).toFixed(2)} หน่วยเวลา`;
+      document.getElementById('avgWTLabel').innerText = `${(sorted.reduce((a,c)=>a+c.wt,0)/sorted.length).toFixed(2)} หน่วยเวลา`;
     }
-
     function updateComparison() {
-      let getAvg = (results) => {
-        let avgTAT = (results.reduce((a, b) => a + b.tat, 0) / results.length).toFixed(2);
-        let avgWT = (results.reduce((a, b) => a + b.wt, 0) / results.length).toFixed(2);
-        return { avgTAT, avgWT };
-      };
-
-      let fcfsAvg = getAvg(calculatedData.fcfs.results);
-      let sjfAvg = getAvg(calculatedData.sjf.results);
-      let rrAvg = getAvg(calculatedData.rr.results);
-
-      document.getElementById('cmpFcfsTAT').innerText = fcfsAvg.avgTAT;
-      document.getElementById('cmpFcfsWT').innerText = fcfsAvg.avgWT;
-
-      document.getElementById('cmpSjfTAT').innerText = sjfAvg.avgTAT;
-      document.getElementById('cmpSjfWT').innerText = sjfAvg.avgWT;
-
-      document.getElementById('cmpRrTAT').innerText = rrAvg.avgTAT;
-      document.getElementById('cmpRrWT').innerText = rrAvg.avgWT;
-
-      let maxWT = Math.max(parseFloat(fcfsAvg.avgWT), parseFloat(sjfAvg.avgWT), parseFloat(rrAvg.avgWT), 1);
-      
-      document.getElementById('barFcfs').style.width = `${(parseFloat(fcfsAvg.avgWT) / maxWT) * 100}%`;
-      document.getElementById('barLabelFcfs').innerText = `${fcfsAvg.avgWT} หน่วย`;
-
-      document.getElementById('barSjf').style.width = `${(parseFloat(sjfAvg.avgWT) / maxWT) * 100}%`;
-      document.getElementById('barLabelSjf').innerText = `${sjfAvg.avgWT} หน่วย`;
-
-      document.getElementById('barRr').style.width = `${(parseFloat(rrAvg.avgWT) / maxWT) * 100}%`;
-      document.getElementById('barLabelRr').innerText = `${rrAvg.avgWT} หน่วย`;
+      const getAvg = res => ({ tat: (res.reduce((a,b)=>a+b.tat,0)/res.length).toFixed(2), wt: (res.reduce((a,b)=>a+b.wt,0)/res.length).toFixed(2) });
+      let f = getAvg(calculatedData.fcfs.results), s = getAvg(calculatedData.sjf.results), r = getAvg(calculatedData.rr.results);
+      document.getElementById('cmpFcfsTAT').innerText = f.tat; document.getElementById('cmpFcfsWT').innerText = f.wt;
+      document.getElementById('cmpSjfTAT').innerText = s.tat; document.getElementById('cmpSjfWT').innerText = s.wt;
+      document.getElementById('cmpRrTAT').innerText = r.tat; document.getElementById('cmpRrWT').innerText = r.wt;
+      let maxW = Math.max(parseFloat(f.wt), parseFloat(s.wt), parseFloat(r.wt), 1);
+      document.getElementById('barFcfs').style.width = `${(parseFloat(f.wt)/maxW)*100}%`; document.getElementById('barLabelFcfs').innerText = `${f.wt} หน่วย`;
+      document.getElementById('barSjf').style.width = `${(parseFloat(s.wt)/maxW)*100}%`; document.getElementById('barLabelSjf').innerText = `${s.wt} หน่วย`;
+      document.getElementById('barRr').style.width = `${(parseFloat(r.wt)/maxW)*100}%`; document.getElementById('barLabelRr').innerText = `${r.wt} หน่วย`;
     }
 
-    // เริ่มต้นระบบ
     getUsersDB();
     updateAuthUI();
     renderBooks();
