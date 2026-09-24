@@ -60,15 +60,15 @@
         </div>
       </div>
 
-      <!-- แถบสลับหน้า (แสดงเฉพาะเมื่อล็อกอิน Admin เท่านั้น) -->
-      <div id="adminNavContainer" class="hidden items-center space-x-1 sm:space-x-2 bg-brand-100/70 p-1 rounded-xl">
+      <!-- แถบสลับหน้า -->
+      <div class="flex items-center space-x-2">
         <button id="navStore" onclick="switchView('store')" class="px-3 sm:px-4 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition bg-white text-brand-600 shadow-sm">หน้าร้าน E-book</button>
-        <button id="navAdmin" onclick="switchView('admin')" class="px-3 sm:px-4 py-1.5 rounded-lg text-xs sm:text-sm font-semibold text-slate-600 hover:text-brand-600 transition">👑 ระบบหลังบ้าน (Admin)</button>
+        <button id="navMyOrders" onclick="switchView('myOrders')" class="hidden px-3 sm:px-4 py-1.5 rounded-lg text-xs sm:text-sm font-semibold text-slate-600 hover:text-brand-600 transition">📦 ประวัติคำสั่งซื้อของฉัน</button>
+        <button id="navAdmin" onclick="switchView('admin')" class="hidden px-3 sm:px-4 py-1.5 rounded-lg text-xs sm:text-sm font-semibold text-slate-600 hover:text-brand-600 transition">👑 หลังบ้าน (Admin)</button>
       </div>
 
-      <!-- ส่วนผู้ใช้งาน & ตะกร้า & ปุ่มล็อกอิน -->
+      <!-- ส่วนผู้ใช้งาน & ตะกร้า -->
       <div class="flex items-center space-x-3">
-        <!-- แสดงเมื่อล็อกอินแล้ว -->
         <div id="userLoggedInBlock" class="hidden items-center space-x-2">
           <div class="text-right hidden sm:block">
             <div class="flex items-center justify-end gap-1">
@@ -80,7 +80,6 @@
           <button onclick="handleLogout()" class="px-2.5 py-1.5 border border-rose-200 text-rose-600 hover:bg-rose-50 rounded-xl text-xs font-semibold transition">ออกจากระบบ</button>
         </div>
 
-        <!-- แสดงเมื่อยังไม่ได้ล็อกอิน -->
         <div id="userGuestBlock" class="flex items-center space-x-1.5">
           <button onclick="openAuthModal('login')" class="px-3 py-1.5 bg-brand-50 hover:bg-brand-100 text-brand-700 rounded-xl text-xs font-semibold transition border border-brand-200">เข้าสู่ระบบ</button>
           <button onclick="openAuthModal('register')" class="px-3 py-1.5 bg-brand-500 hover:bg-brand-600 text-white rounded-xl text-xs font-semibold transition shadow-sm">สมัครสมาชิก</button>
@@ -125,50 +124,48 @@
     </section>
 
     <!-- ========================================== -->
-    <!-- VIEW 2: หลังบ้าน (Admin Management Panel)  -->
+    <!-- VIEW 2: ประวัติคำสั่งซื้อของฉัน (My Orders) -->
     <!-- ========================================== -->
-    <section id="viewAdmin" class="hidden">
-      <div class="bg-white rounded-3xl p-6 border border-brand-200 shadow-sm mb-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+    <section id="viewMyOrders" class="hidden space-y-6">
+      <div class="bg-white rounded-3xl p-6 border border-brand-200 shadow-sm">
+        <h2 class="text-2xl font-bold text-slate-800">📦 ประวัติคำสั่งซื้อและลิงก์ดาวน์โหลดของฉัน</h2>
+        <p class="text-xs text-slate-500 mt-1">ตรวจสอบสถานะคำสั่งซื้อและดาวน์โหลด E-Book ที่คุณเป็นเจ้าของได้ตลอด 24 ชั่วโมง</p>
+      </div>
+      <div id="myOrdersList" class="space-y-4"></div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- VIEW 3: หลังบ้าน (Admin Management Panel)  -->
+    <!-- ========================================== -->
+    <section id="viewAdmin" class="hidden space-y-6">
+      <div class="bg-white rounded-3xl p-6 border border-brand-200 shadow-sm flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
           <div class="flex items-center gap-2">
             <h2 class="text-2xl font-bold text-slate-800">ระบบจัดการหลังบ้าน (GusSo Management)</h2>
             <span class="bg-rose-100 text-rose-700 px-2.5 py-0.5 rounded-full text-xs font-bold">🔒 Admin Only</span>
           </div>
-          <p class="text-slate-500 text-xs mt-1">ควบคุมสต็อกสินค้า ตรวจสอบยอดขาย และระบบจำลองจัดตารางงานเซิร์ฟเวอร์ (CPU Scheduling)</p>
+          <p class="text-slate-500 text-xs mt-1">ควบคุมสต็อกสินค้า เพิ่ม/แก้ไขหนังสือ ตรวจสอบคำสั่งซื้อ จัดการสมาชิก และจำลอง CPU Scheduling</p>
         </div>
 
-        <div class="flex bg-slate-100 p-1.5 rounded-2xl gap-1">
-          <button id="adminSubtabStoreBtn" onclick="switchAdminSubtab('store')" class="px-4 py-2 rounded-xl text-xs font-bold bg-white text-brand-600 shadow-sm transition">
-            📦 จัดการสินค้าและยอดขาย
-          </button>
-          <button id="adminSubtabCpuBtn" onclick="switchAdminSubtab('cpu')" class="px-4 py-2 rounded-xl text-xs font-bold text-slate-600 hover:text-brand-600 transition">
-            ⚙️ จำลองการจัดคิวงานระบบ (OS CPU Scheduler)
-          </button>
+        <div class="flex flex-wrap bg-slate-100 p-1.5 rounded-2xl gap-1">
+          <button id="adminTabBooksBtn" onclick="switchAdminTab('books')" class="px-3 py-2 rounded-xl text-xs font-bold bg-white text-brand-600 shadow-sm transition">📦 จัดการหนังสือ</button>
+          <button id="adminTabOrdersBtn" onclick="switchAdminTab('orders')" class="px-3 py-2 rounded-xl text-xs font-bold text-slate-600 hover:text-brand-600 transition">🛒 จัดการคำสั่งซื้อ</button>
+          <button id="adminTabUsersBtn" onclick="switchAdminTab('users')" class="px-3 py-2 rounded-xl text-xs font-bold text-slate-600 hover:text-brand-600 transition">👥 จัดการสมาชิก</button>
+          <button id="adminTabCpuBtn" onclick="switchAdminTab('cpu')" class="px-3 py-2 rounded-xl text-xs font-bold text-slate-600 hover:text-brand-600 transition">⚙️ CPU Scheduler</button>
         </div>
       </div>
 
-      <!-- ส่วนที่ 1: สต็อกสินค้าและยอดขาย -->
-      <div id="adminStorePanel">
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
-          <div class="bg-white p-5 rounded-2xl border border-brand-200 shadow-sm">
-            <div class="text-slate-400 text-xs font-medium">ยอดขายรวมทั้งหมด (32 คำสั่งซื้อ)</div>
-            <div class="text-2xl font-bold text-brand-600 mt-1">฿8,460.00</div>
-          </div>
-          <div class="bg-white p-5 rounded-2xl border border-brand-200 shadow-sm">
-            <div class="text-slate-400 text-xs font-medium">จำนวนบัญชีผู้ใช้ในระบบ Data</div>
-            <div id="totalUsersCount" class="text-2xl font-bold text-slate-800 mt-1">1 บัญชี</div>
-          </div>
-          <div class="bg-white p-5 rounded-2xl border border-brand-200 shadow-sm">
-            <div class="text-slate-400 text-xs font-medium">E-Book ทั้งหมดในระบบ</div>
-            <div class="text-2xl font-bold text-emerald-600 mt-1">6 รายการ</div>
+      <!-- Tab 1: จัดการหนังสือ -->
+      <div id="adminPanelBooks" class="space-y-4">
+        <div class="flex justify-between items-center bg-white p-4 rounded-2xl border border-brand-200 shadow-sm">
+          <div class="text-sm font-bold text-slate-800">รายการสินค้า E-Book ทั้งหมด</div>
+          <div class="flex gap-2">
+            <button onclick="exportToCSV()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-semibold shadow transition">📥 Export รายงาน CSV</button>
+            <button onclick="openBookFormModal()" class="px-4 py-2 bg-brand-500 hover:bg-brand-600 text-white rounded-xl text-xs font-semibold shadow transition">+ เพิ่มหนังสือเล่มใหม่</button>
           </div>
         </div>
 
         <div class="bg-white rounded-2xl border border-brand-200 shadow-sm overflow-hidden">
-          <div class="p-4 border-b border-brand-100 flex justify-between items-center bg-slate-50/50">
-            <span class="font-bold text-slate-700 text-sm">รายการสต็อกหนังสือดิจิทัล</span>
-            <span class="text-xs text-slate-400">*คลิกปุ่มเพื่อเปิด/ปิดสถานะวางจำหน่าย</span>
-          </div>
           <div class="overflow-x-auto">
             <table class="w-full text-left text-sm">
               <thead class="bg-brand-50 text-slate-600">
@@ -178,23 +175,65 @@
                   <th class="p-4">ผู้แต่ง</th>
                   <th class="p-4">หมวดหมู่</th>
                   <th class="p-4">ราคา</th>
-                  <th class="p-4">สถานะวางขาย</th>
+                  <th class="p-4">สถานะ</th>
                   <th class="p-4 text-center">จัดการ</th>
                 </tr>
               </thead>
-              <tbody id="adminBookList" class="divide-y divide-slate-100"></tbody>
+              <tbody id="adminBookTableList" class="divide-y divide-slate-100"></tbody>
             </table>
           </div>
         </div>
       </div>
 
-      <!-- ส่วนที่ 2: CPU Scheduling Simulator -->
-      <div id="adminCpuPanel" class="hidden space-y-6">
+      <!-- Tab 2: จัดการคำสั่งซื้อ -->
+      <div id="adminPanelOrders" class="hidden space-y-4">
+        <div class="bg-white rounded-2xl border border-brand-200 shadow-sm overflow-hidden p-4">
+          <h3 class="font-bold text-slate-800 text-sm mb-3">รายการคำสั่งซื้อของลูกค้าทั้งหมดในระบบ</h3>
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs">
+              <thead class="bg-brand-50 text-slate-600 font-semibold">
+                <tr>
+                  <th class="p-3">เลขที่ใบเสร็จ</th>
+                  <th class="p-3">ผู้ซื้อ</th>
+                  <th class="p-3">รายการหนังสือ</th>
+                  <th class="p-3">ยอดชำระ</th>
+                  <th class="p-3">สถานะ</th>
+                  <th class="p-3 text-center">เปลี่ยนสถานะ</th>
+                </tr>
+              </thead>
+              <tbody id="adminOrdersTableList" class="divide-y divide-slate-100 font-mono"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab 3: จัดการสมาชิก -->
+      <div id="adminPanelUsers" class="hidden space-y-4">
+        <div class="bg-white rounded-2xl border border-brand-200 shadow-sm overflow-hidden p-4">
+          <h3 class="font-bold text-slate-800 text-sm mb-3">บัญชีผู้ใช้งานในระบบ Data</h3>
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs">
+              <thead class="bg-brand-50 text-slate-600 font-semibold">
+                <tr>
+                  <th class="p-3">ชื่อ-นามสกุล</th>
+                  <th class="p-3">อีเมล</th>
+                  <th class="p-3">สถานะสิทธิ์ (Role)</th>
+                  <th class="p-3 text-center">จัดการ</th>
+                </tr>
+              </thead>
+              <tbody id="adminUsersTableList" class="divide-y divide-slate-100"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab 4: CPU Scheduler -->
+      <div id="adminPanelCpu" class="hidden space-y-6">
         <div class="bg-white rounded-3xl p-6 border border-brand-200 shadow-sm">
           <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-slate-100 pb-4 mb-4">
             <div>
               <h3 class="text-lg font-bold text-slate-800">ระบบจำลองการจัดตารางงานเซิร์ฟเวอร์ (Server Task CPU Scheduling)</h3>
-              <p class="text-xs text-slate-500">เปรียบเทียบประสิทธิภาพ FCFS, SJF (Non-preemptive), และ Round Robin ด้วยชุดข้อมูลเดียวกัน</p>
+              <p class="text-xs text-slate-500">เปรียบเทียบประสิทธิภาพ FCFS, SJF (Non-preemptive), และ Round Robin</p>
             </div>
             <div class="flex flex-wrap gap-2">
               <button onclick="generateRandomProblem()" class="px-4 py-2 bg-brand-500 hover:bg-brand-600 text-white rounded-xl text-xs font-semibold shadow transition">🎲 สุ่มโจทย์ใหม่</button>
@@ -230,10 +269,7 @@
 
         <div id="printArea" class="space-y-6">
           <div class="bg-white rounded-3xl p-6 border border-brand-200 shadow-sm">
-            <div class="flex justify-between items-center mb-3">
-              <h4 class="font-bold text-slate-800 text-sm">ตารางงานที่ได้รับมอบหมาย (Task Pool)</h4>
-              <span class="text-[11px] bg-brand-50 text-brand-600 px-2.5 py-1 rounded-full font-medium">*กติกา: มีอย่างน้อย 1 งานที่มี AT = 0 และ BT อยู่ระหว่าง 1-8</span>
-            </div>
+            <h4 class="font-bold text-slate-800 text-sm mb-3">ตารางงานที่ได้รับมอบหมาย (Task Pool)</h4>
             <div class="overflow-x-auto">
               <table class="w-full text-left text-xs">
                 <thead class="bg-brand-50 text-slate-600">
@@ -242,7 +278,6 @@
                     <th class="p-3">งาน / วิชา</th>
                     <th class="p-3">Arrival Time (AT)</th>
                     <th class="p-3">Burst Time (BT)</th>
-                    <th class="p-3">วันและเวลารับงานจำลอง</th>
                   </tr>
                 </thead>
                 <tbody id="taskTableBody" class="divide-y divide-slate-100 font-mono"></tbody>
@@ -251,9 +286,9 @@
           </div>
 
           <div class="flex space-x-2 border-b border-brand-200 pb-2">
-            <button onclick="switchAlgoTab('fcfs')" id="tabBtnFCFS" class="px-4 py-1.5 rounded-xl text-xs font-bold bg-brand-500 text-white shadow-sm">1. FCFS (First-Come, First-Served)</button>
-            <button onclick="switchAlgoTab('sjf')" id="tabBtnSJF" class="px-4 py-1.5 rounded-xl text-xs font-bold bg-white text-slate-600 hover:text-brand-600">2. SJF (Non-preemptive)</button>
-            <button onclick="switchAlgoTab('rr')" id="tabBtnRR" class="px-4 py-1.5 rounded-xl text-xs font-bold bg-white text-slate-600 hover:text-brand-600">3. Round Robin (q = <span id="labelQ">2</span>)</button>
+            <button onclick="switchAlgoTab('fcfs')" id="tabBtnFCFS" class="px-4 py-1.5 rounded-xl text-xs font-bold bg-brand-500 text-white shadow-sm">1. FCFS</button>
+            <button onclick="switchAlgoTab('sjf')" id="tabBtnSJF" class="px-4 py-1.5 rounded-xl text-xs font-bold bg-white text-slate-600 hover:text-brand-600">2. SJF</button>
+            <button onclick="switchAlgoTab('rr')" id="tabBtnRR" class="px-4 py-1.5 rounded-xl text-xs font-bold bg-white text-slate-600 hover:text-brand-600">3. Round Robin</button>
           </div>
 
           <div class="bg-white rounded-3xl p-6 border border-brand-200 shadow-sm">
@@ -269,9 +304,9 @@
                     <th class="p-3">Process</th>
                     <th class="p-3">AT</th>
                     <th class="p-3">BT</th>
-                    <th class="p-3">Completion Time (CT)</th>
-                    <th class="p-3">Turnaround Time (TAT)</th>
-                    <th class="p-3">Waiting Time (WT)</th>
+                    <th class="p-3">CT</th>
+                    <th class="p-3">TAT</th>
+                    <th class="p-3">WT</th>
                   </tr>
                 </thead>
                 <tbody id="algoResultTable" class="divide-y divide-slate-100"></tbody>
@@ -288,44 +323,6 @@
               </div>
             </div>
           </div>
-
-          <!-- สรุปเปรียบเทียบผลลัพธ์ -->
-          <div class="bg-white rounded-3xl p-6 border border-brand-200 shadow-sm">
-            <h4 class="font-bold text-slate-800 text-sm mb-4">ตารางและกราฟเปรียบเทียบผลลัพธ์ทั้ง 3 อัลกอริทึม</h4>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-              <div class="p-4 rounded-2xl border border-slate-200 bg-slate-50/50">
-                <div class="font-bold text-xs text-slate-700">FCFS</div>
-                <div class="text-xs text-slate-500 mt-1">TAT เฉลี่ย: <b id="cmpFcfsTAT" class="text-slate-700">-</b></div>
-                <div class="text-xs text-slate-500">WT เฉลี่ย: <b id="cmpFcfsWT" class="text-brand-600">-</b></div>
-              </div>
-              <div class="p-4 rounded-2xl border border-slate-200 bg-slate-50/50">
-                <div class="font-bold text-xs text-slate-700">SJF (Non-preemptive)</div>
-                <div class="text-xs text-slate-500 mt-1">TAT เฉลี่ย: <b id="cmpSjfTAT" class="text-slate-700">-</b></div>
-                <div class="text-xs text-slate-500">WT เฉลี่ย: <b id="cmpSjfWT" class="text-brand-600">-</b></div>
-              </div>
-              <div class="p-4 rounded-2xl border border-slate-200 bg-slate-50/50">
-                <div class="font-bold text-xs text-slate-700">Round Robin</div>
-                <div class="text-xs text-slate-500 mt-1">TAT เฉลี่ย: <b id="cmpRrTAT" class="text-slate-700">-</b></div>
-                <div class="text-xs text-slate-500">WT เฉลี่ย: <b id="cmpRrWT" class="text-brand-600">-</b></div>
-              </div>
-            </div>
-
-            <div class="space-y-3">
-              <h5 class="text-xs font-semibold text-slate-600">เปรียบเทียบ Average Waiting Time (ค่ายิ่งน้อยยิ่งดี):</h5>
-              <div>
-                <div class="flex justify-between text-xs mb-1 font-mono"><span>FCFS</span><span id="barLabelFcfs">0</span></div>
-                <div class="w-full bg-slate-100 rounded-full h-3"><div id="barFcfs" class="bg-sky-400 h-3 rounded-full transition-all duration-500" style="width: 0%"></div></div>
-              </div>
-              <div>
-                <div class="flex justify-between text-xs mb-1 font-mono"><span>SJF</span><span id="barLabelSjf">0</span></div>
-                <div class="w-full bg-slate-100 rounded-full h-3"><div id="barSjf" class="bg-emerald-400 h-3 rounded-full transition-all duration-500" style="width: 0%"></div></div>
-              </div>
-              <div>
-                <div class="flex justify-between text-xs mb-1 font-mono"><span>Round Robin</span><span id="barLabelRr">0</span></div>
-                <div class="w-full bg-slate-100 rounded-full h-3"><div id="barRr" class="bg-brand-600 h-3 rounded-full transition-all duration-500" style="width: 0%"></div></div>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
     </section>
@@ -336,39 +333,88 @@
   <!-- MODALS                                     -->
   <!-- ========================================== -->
 
-  <!-- โมดอลรายละเอียดและเนื้อหาหนังสือ -->
+  <!-- โมดอลรายละเอียดหนังสือ (ปรับเนื้อหายาวและชัดเจนขึ้นตามโจทย์) -->
   <div id="bookDetailModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 no-print">
-    <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl relative max-h-[90vh] overflow-y-auto">
+    <div class="bg-white rounded-3xl max-w-xl w-full p-6 shadow-2xl relative max-h-[90vh] overflow-y-auto">
       <button onclick="closeBookDetail()" class="absolute top-5 right-5 text-slate-400 hover:text-slate-600 text-2xl leading-none">&times;</button>
       <div class="flex items-start gap-4 pb-4 border-b border-slate-100">
-        <img id="detailBookCover" src="" alt="Cover" class="w-24 h-36 object-cover rounded-xl shrink-0 border border-brand-200 shadow-md">
+        <img id="detailBookCover" src="" alt="Cover" class="w-28 h-40 object-cover rounded-xl shrink-0 border border-brand-200 shadow-md">
         <div>
           <span id="detailCategory" class="text-[11px] px-2.5 py-0.5 bg-brand-50 text-brand-600 rounded-full font-medium">หมวดหมู่</span>
-          <h3 id="detailTitle" class="text-base sm:text-lg font-bold text-slate-800 mt-1">ชื่อหนังสือ</h3>
-          <p id="detailAuthor" class="text-xs text-slate-500">ผู้แต่ง: -</p>
-          <div id="detailPrice" class="text-base font-bold text-brand-600 mt-1">฿0.00</div>
+          <h3 id="detailTitle" class="text-lg sm:text-xl font-bold text-slate-800 mt-1">ชื่อหนังสือ</h3>
+          <p id="detailAuthor" class="text-xs text-slate-500 mt-0.5">ผู้แต่ง: -</p>
+          <div id="detailPrice" class="text-lg font-bold text-brand-600 mt-2">฿0.00</div>
         </div>
       </div>
 
-      <div class="py-4 space-y-3 text-xs">
-        <div>
-          <h4 class="font-bold text-slate-800 text-sm mb-1">📖 เกี่ยวกับหนังสือเล่มนี้ / เรื่องย่อ:</h4>
-          <p id="detailSynopsis" class="text-slate-600 leading-relaxed bg-slate-50 p-3.5 rounded-xl border border-slate-100"></p>
+      <div class="py-4 space-y-4 text-xs">
+        <div class="bg-brand-50/50 p-4 rounded-2xl border border-brand-100">
+          <h4 class="font-bold text-brand-900 text-sm mb-1.5">📖 เรื่องย่อและภาพรวมของหนังสือ:</h4>
+          <p id="detailSynopsis" class="text-slate-700 leading-relaxed text-sm"></p>
         </div>
         <div>
-          <h4 class="font-bold text-slate-800 text-sm mb-1">📌 สิ่งที่คุณจะได้เรียนรู้ / เนื้อหาหลัก:</h4>
-          <ul id="detailHighlights" class="list-disc list-inside space-y-1 text-slate-600 pl-1"></ul>
+          <h4 class="font-bold text-slate-800 text-sm mb-1.5">📌 หัวข้อเนื้อหาที่คุณจะได้เรียนรู้ภายในเล่ม:</h4>
+          <ul id="detailHighlights" class="list-disc list-inside space-y-1.5 text-slate-700 pl-1 font-medium"></ul>
         </div>
       </div>
 
-      <div class="pt-3 border-t border-slate-100 flex gap-2">
-        <button onclick="closeBookDetail()" class="flex-1 py-2.5 border border-slate-300 rounded-xl text-xs font-semibold hover:bg-slate-50">ปิด</button>
-        <button id="detailAddToCartBtn" class="flex-1 py-2.5 bg-brand-500 hover:bg-brand-600 text-white rounded-xl text-xs font-semibold shadow transition">+ เพิ่มลงตะกร้า</button>
+      <div class="pt-4 border-t border-slate-100 flex gap-3">
+        <button onclick="closeBookDetail()" class="flex-1 py-3 border border-slate-300 rounded-xl text-xs font-semibold hover:bg-slate-50">ปิดหน้าต่าง</button>
+        <button id="detailAddToCartBtn" class="flex-1 py-3 bg-brand-500 hover:bg-brand-600 text-white rounded-xl text-xs font-semibold shadow transition">+ เพิ่มลงตะกร้าสินค้า</button>
       </div>
     </div>
   </div>
 
-  <!-- โมดอลล็อกอิน / สมัครสมาชิก / ลืมรหัสผ่าน -->
+  <!-- โมดอลเพิ่ม/แก้ไขหนังสือสำหรับ Admin -->
+  <div id="bookFormModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 no-print">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl relative">
+      <div class="flex justify-between items-center pb-3 border-b mb-4">
+        <h3 id="bookFormTitle" class="text-lg font-bold text-slate-800">เพิ่มหนังสือใหม่</h3>
+        <button onclick="closeBookFormModal()" class="text-slate-400 hover:text-slate-600 text-2xl">&times;</button>
+      </div>
+      <form onsubmit="handleBookFormSubmit(event)" class="space-y-3 text-xs">
+        <input type="hidden" id="editBookId">
+        <div>
+          <label class="block font-semibold text-slate-600 mb-1">ชื่อหนังสือ</label>
+          <input type="text" id="formBookTitle" required class="w-full px-3 py-2 border rounded-xl">
+        </div>
+        <div>
+          <label class="block font-semibold text-slate-600 mb-1">ผู้แต่ง</label>
+          <input type="text" id="formBookAuthor" required class="w-full px-3 py-2 border rounded-xl">
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block font-semibold text-slate-600 mb-1">หมวดหมู่</label>
+            <select id="formBookCat" class="w-full px-3 py-2 border rounded-xl">
+              <option value="วรรณกรรมและนิยาย">วรรณกรรมและนิยาย</option>
+              <option value="จิตวิทยาและพัฒนาตนเอง">จิตวิทยาและพัฒนาตนเอง</option>
+              <option value="เทคโนโลยีและคอมพิวเตอร์">เทคโนโลยีและคอมพิวเตอร์</option>
+              <option value="การเงินและการลงทุน">การเงินและการลงทุน</option>
+            </select>
+          </div>
+          <div>
+            <label class="block font-semibold text-slate-600 mb-1">ราคา (บาท)</label>
+            <input type="number" id="formBookPrice" required min="1" step="0.5" class="w-full px-3 py-2 border rounded-xl">
+          </div>
+        </div>
+        <div>
+          <label class="block font-semibold text-slate-600 mb-1">ลิงก์รูปภาพปก (เช่น images/magic1.jpg)</label>
+          <input type="text" id="formBookCover" required value="images/magic1.jpg" class="w-full px-3 py-2 border rounded-xl">
+        </div>
+        <div>
+          <label class="block font-semibold text-slate-600 mb-1">เรื่องย่อ</label>
+          <textarea id="formBookSynopsis" rows="2" required class="w-full px-3 py-2 border rounded-xl"></textarea>
+        </div>
+        <div>
+          <label class="block font-semibold text-slate-600 mb-1">จุดเด่น/หัวข้อ (คั่นด้วยเครื่องหมายจุลภาค ,)</label>
+          <input type="text" id="formBookHighlights" required placeholder="เช่น แฟนตาซี, เวทมนตร์, ผจญภัย" class="w-full px-3 py-2 border rounded-xl">
+        </div>
+        <button type="submit" class="w-full py-3 bg-brand-500 hover:bg-brand-600 text-white font-bold rounded-xl shadow mt-2">บันทึกข้อมูลหนังสือ</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- โมดอล Auth (Login / Register / Forgot) -->
   <div id="authModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 no-print">
     <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl">
       <div class="flex justify-between items-center pb-3 border-b border-slate-100">
@@ -387,17 +433,12 @@
             <label class="block text-xs font-semibold text-slate-600">รหัสผ่าน</label>
             <a href="javascript:switchAuthMode('forgot')" class="text-[11px] text-brand-600 hover:underline">ลืมรหัสผ่าน?</a>
           </div>
-          <!-- ช่องรหัสผ่าน พร้อมปุ่มเปิด/ปิดดูรหัส -->
           <div class="relative">
             <input type="password" id="loginPassword" required placeholder="••••••••" class="w-full px-3.5 py-2 pr-10 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-brand-400 focus:outline-none">
             <button type="button" onclick="togglePasswordVisibility('loginPassword', 'eyeIconLogin')" class="absolute right-3 top-2.5 text-slate-400 hover:text-slate-600 text-sm focus:outline-none">
               <span id="eyeIconLogin">👁️</span>
             </button>
           </div>
-        </div>
-        <div class="flex items-center">
-          <input type="checkbox" id="loginRemember" class="w-4 h-4 text-brand-500 rounded border-slate-300 focus:ring-brand-400">
-          <label for="loginRemember" class="ml-2 text-xs text-slate-600">ยินยอมให้จดจำข้อมูลและบันทึก Data ในเครื่อง</label>
         </div>
         <button type="submit" class="w-full py-2.5 bg-brand-500 hover:bg-brand-600 text-white rounded-xl text-sm font-semibold shadow transition">เข้าสู่ระบบ</button>
         <p class="text-center text-xs text-slate-500">ยังไม่มีบัญชีใช่หรือไม่? <a href="javascript:switchAuthMode('register')" class="text-brand-600 font-semibold hover:underline">สมัครสมาชิกใหม่</a></p>
@@ -406,40 +447,32 @@
       <!-- ฟอร์มสมัครสมาชิก -->
       <form id="formRegister" onsubmit="handleRegisterSubmit(event)" class="space-y-3 pt-4 hidden">
         <div>
-          <label class="block text-xs font-semibold text-slate-600 mb-1">ชื่อผู้ใช้งาน / ชื่อ-นามสกุล</label>
-          <input type="text" id="regName" required placeholder="เช่น สมชาย สายอ่าน" class="w-full px-3.5 py-2 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-brand-400 focus:outline-none">
+          <label class="block text-xs font-semibold text-slate-600 mb-1">ชื่อผู้ใช้งาน</label>
+          <input type="text" id="regName" required placeholder="ชื่อ-นามสกุล" class="w-full px-3.5 py-2 border border-slate-200 rounded-xl text-sm">
         </div>
         <div>
-          <label class="block text-xs font-semibold text-slate-600 mb-1">อีเมลจริง (ใช้สำหรับรับใบเสร็จและลิงก์)</label>
-          <input type="email" id="regEmail" required placeholder="your.real.email@gmail.com" class="w-full px-3.5 py-2 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-brand-400 focus:outline-none">
+          <label class="block text-xs font-semibold text-slate-600 mb-1">อีเมลจริง</label>
+          <input type="email" id="regEmail" required placeholder="your.real.email@gmail.com" class="w-full px-3.5 py-2 border border-slate-200 rounded-xl text-sm">
         </div>
         <div>
-          <label class="block text-xs font-semibold text-slate-600 mb-1">รหัสผ่านที่บันทึก</label>
-          <!-- ช่องรหัสผ่านสมัครสมาชิก พร้อมปุ่มเปิด/ปิดดูรหัส -->
+          <label class="block text-xs font-semibold text-slate-600 mb-1">รหัสผ่าน</label>
           <div class="relative">
-            <input type="password" id="regPassword" required placeholder="ตั้งรหัสผ่าน 6 ตัวขึ้นไป" minlength="6" class="w-full px-3.5 py-2 pr-10 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-brand-400 focus:outline-none">
-            <button type="button" onclick="togglePasswordVisibility('regPassword', 'eyeIconReg')" class="absolute right-3 top-2.5 text-slate-400 hover:text-slate-600 text-sm focus:outline-none">
+            <input type="password" id="regPassword" required placeholder="อย่างน้อย 6 ตัว" minlength="6" class="w-full px-3.5 py-2 pr-10 border border-slate-200 rounded-xl text-sm">
+            <button type="button" onclick="togglePasswordVisibility('regPassword', 'eyeIconReg')" class="absolute right-3 top-2.5 text-slate-400">
               <span id="eyeIconReg">👁️</span>
             </button>
           </div>
         </div>
-        <div class="flex items-start">
-          <input type="checkbox" id="regConsent" required class="w-4 h-4 mt-0.5 text-brand-500 rounded border-slate-300 focus:ring-brand-400">
-          <label for="regConsent" class="ml-2 text-xs text-slate-600">ยินยอมให้จดจำข้อมูลและบันทึก Data สมาชิกไว้ในระบบเพื่อใช้เข้าสู่ระบบในครั้งต่อไป</label>
-        </div>
-        <button type="submit" class="w-full py-2.5 bg-brand-500 hover:bg-brand-600 text-white rounded-xl text-sm font-semibold shadow transition">สร้างบัญชีและบันทึก Data</button>
+        <button type="submit" class="w-full py-2.5 bg-brand-500 hover:bg-brand-600 text-white rounded-xl text-sm font-semibold shadow transition">สร้างบัญชี</button>
         <p class="text-center text-xs text-slate-500">มีบัญชีแล้ว? <a href="javascript:switchAuthMode('login')" class="text-brand-600 font-semibold hover:underline">เข้าสู่ระบบ</a></p>
       </form>
 
       <!-- ฟอร์มลืมรหัสผ่าน -->
       <form id="formForgot" onsubmit="handleForgotSubmit(event)" class="space-y-4 pt-4 hidden">
-        <p class="text-xs text-slate-500 leading-relaxed">กรุณากรอกอีเมลจริงของคุณที่เคยลงทะเบียน ระบบจะส่งอีเมลพร้อมลิงก์เพื่อเปิดหน้ารีเซ็ตรหัสผ่านจากอุปกรณ์ใดก็ได้</p>
-        <div>
-          <label class="block text-xs font-semibold text-slate-600 mb-1">อีเมลของคุณ</label>
-          <input type="email" id="forgotEmail" required placeholder="name@example.com" class="w-full px-3.5 py-2 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-brand-400 focus:outline-none">
-        </div>
-        <button type="submit" id="btnForgotSubmit" class="w-full py-2.5 bg-brand-500 hover:bg-brand-600 text-white rounded-xl text-sm font-semibold shadow transition">ส่งลิงก์รีเซ็ตรหัสผ่านไปยังอีเมลจริง</button>
-        <p class="text-center text-xs text-slate-500">จำรหัสผ่านได้แล้ว? <a href="javascript:switchAuthMode('login')" class="text-brand-600 font-semibold hover:underline">กลับไปเข้าสู่ระบบ</a></p>
+        <p class="text-xs text-slate-500">กรอกอีเมลของคุณเพื่อรับลิงก์รีเซ็ตรหัสผ่าน</p>
+        <input type="email" id="forgotEmail" required placeholder="name@example.com" class="w-full px-3.5 py-2 border border-slate-200 rounded-xl text-sm">
+        <button type="submit" id="btnForgotSubmit" class="w-full py-2.5 bg-brand-500 text-white rounded-xl text-sm font-semibold shadow">ส่งลิงก์รีเซ็ตรหัสผ่าน</button>
+        <p class="text-center text-xs text-slate-500"><a href="javascript:switchAuthMode('login')" class="text-brand-600 hover:underline">กลับไปเข้าสู่ระบบ</a></p>
       </form>
     </div>
   </div>
@@ -449,7 +482,7 @@
     <div class="bg-white w-full max-w-md h-full p-6 flex flex-col shadow-2xl">
       <div class="flex justify-between items-center pb-4 border-b">
         <h3 class="text-lg font-bold text-slate-800">ตะกร้าสินค้าของฉัน</h3>
-        <button onclick="closeCart()" class="text-slate-400 hover:text-slate-600 text-2xl leading-none">&times;</button>
+        <button onclick="closeCart()" class="text-slate-400 hover:text-slate-600 text-2xl">&times;</button>
       </div>
       <div id="cartList" class="flex-1 overflow-y-auto py-4 space-y-3"></div>
       <div class="pt-4 border-t space-y-3">
@@ -457,9 +490,7 @@
           <span>ยอดรวมทั้งสิ้น:</span>
           <span id="cartTotal" class="text-brand-600">฿0.00</span>
         </div>
-        <button onclick="openCheckout()" class="w-full py-3 bg-brand-500 hover:bg-brand-600 text-white font-bold rounded-xl shadow transition">
-          สั่งซื้อและชำระเงิน (PromptPay)
-        </button>
+        <button onclick="openCheckout()" class="w-full py-3 bg-brand-500 hover:bg-brand-600 text-white font-bold rounded-xl shadow">สั่งซื้อและชำระเงิน (PromptPay)</button>
       </div>
     </div>
   </div>
@@ -468,378 +499,207 @@
   <div id="checkoutModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 no-print">
     <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl text-center">
       <h3 class="text-lg font-bold text-slate-800">สแกนชำระเงินด้วย PromptPay</h3>
-      <p class="text-xs text-slate-500 mt-1">ร้าน GusSo E-Book Store</p>
-      
-      <div class="my-4 p-4 bg-brand-50 border border-brand-200 rounded-2xl inline-block">
-        <svg class="w-44 h-44 mx-auto" viewBox="0 0 100 100" fill="currentColor">
-          <rect x="10" y="10" width="25" height="25" fill="#0369a1"/>
-          <rect x="15" y="15" width="15" height="15" fill="#ffffff"/>
-          <rect x="18" y="18" width="9" height="9" fill="#0369a1"/>
-          <rect x="65" y="10" width="25" height="25" fill="#0369a1"/>
-          <rect x="70" y="15" width="15" height="15" fill="#ffffff"/>
-          <rect x="73" y="18" width="9" height="9" fill="#0369a1"/>
-          <rect x="10" y="65" width="25" height="25" fill="#0369a1"/>
-          <rect x="15" y="70" width="15" height="15" fill="#ffffff"/>
-          <rect x="18" y="73" width="9" height="9" fill="#0369a1"/>
-          <rect x="42" y="15" width="8" height="8" fill="#0369a1"/>
-          <rect x="42" y="35" width="16" height="8" fill="#0369a1"/>
-          <rect x="45" y="55" width="10" height="25" fill="#0369a1"/>
-          <rect x="65" y="65" width="15" height="15" fill="#0369a1"/>
-          <rect x="75" y="45" width="15" height="10" fill="#0369a1"/>
+      <div class="my-4 p-4 bg-brand-50 border rounded-2xl inline-block">
+        <svg class="w-40 h-40 mx-auto" viewBox="0 0 100 100" fill="currentColor">
+          <rect x="10" y="10" width="25" height="25" fill="#0369a1"/><rect x="65" y="10" width="25" height="25" fill="#0369a1"/><rect x="10" y="65" width="25" height="25" fill="#0369a1"/>
         </svg>
       </div>
-
       <div class="text-lg font-bold text-brand-600 mb-4" id="payAmountLabel">ยอดชำระ: ฿0.00</div>
       <div class="flex gap-2">
-        <button onclick="closeCheckout()" class="flex-1 py-2.5 border border-slate-300 rounded-xl text-sm font-semibold hover:bg-slate-50">ยกเลิก</button>
-        <button onclick="confirmPayment()" class="flex-1 py-2.5 bg-brand-500 hover:bg-brand-600 text-white rounded-xl text-sm font-semibold shadow">จำลองการโอนสำเร็จ</button>
+        <button onclick="closeCheckout()" class="flex-1 py-2.5 border rounded-xl text-sm font-semibold">ยกเลิก</button>
+        <button onclick="confirmPayment()" class="flex-1 py-2.5 bg-brand-500 text-white rounded-xl text-sm font-semibold shadow">จำลองการโอนสำเร็จ</button>
       </div>
     </div>
   </div>
 
-  <!-- โมดอลใบเสร็จ -->
-  <div id="receiptModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 no-print">
-    <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl">
-      <div class="text-center mb-4">
-        <div class="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto text-2xl mb-2 font-bold">✓</div>
-        <h3 class="text-xl font-bold text-slate-800">สั่งซื้อและชำระเงินสำเร็จ!</h3>
-        <div id="receiptNoticeEmail" class="text-xs text-brand-600 bg-brand-50 py-1 px-3 rounded-full inline-block mt-1 font-medium">📧 ส่งใบเสร็จคำสั่งซื้อจริงไปยังอีเมลของคุณเรียบร้อยแล้ว</div>
-      </div>
-
-      <div id="receiptContent" class="bg-slate-50 border border-slate-200 rounded-2xl p-4 text-xs font-mono space-y-2 mb-4"></div>
-
-      <button onclick="closeReceipt()" class="w-full py-2.5 bg-slate-800 hover:bg-slate-900 text-white text-sm font-semibold rounded-xl">ปิดหน้านี้</button>
-    </div>
-  </div>
-
-  <!-- ========================================== -->
-  <!-- JAVASCRIPT LOGIC                           -->
-  <!-- ========================================== -->
+  <!-- JAVASCRIPT LOGIC -->
   <script>
-    // ฟังก์ชันเปิด/ปิดแสดงรหัสผ่าน
     function togglePasswordVisibility(inputId, iconId) {
       const input = document.getElementById(inputId);
       const icon = document.getElementById(iconId);
-      if (input.type === 'password') {
-        input.type = 'text';
-        icon.innerText = '🙈';
-      } else {
-        input.type = 'password';
-        icon.innerText = '👁️';
-      }
+      if (input.type === 'password') { input.type = 'text'; icon.innerText = '🙈'; }
+      else { input.type = 'password'; icon.innerText = '👁️'; }
     }
 
-    // 0. User Data & Authentication
     const STORAGE_KEY_USERS = 'gusso_users_db';
     const STORAGE_KEY_SESSION = 'gusso_current_session';
-
+    const STORAGE_KEY_BOOKS = 'gusso_books_db';
+    const STORAGE_KEY_ORDERS = 'gusso_orders_db';
     const ADMIN_EMAILS = ['admin@gusso.com'];
 
-    function isAdminUser(user) {
-      if (!user || !user.email) return false;
-      return ADMIN_EMAILS.includes(user.email.toLowerCase().trim());
-    }
+    function isAdminUser(user) { return user && user.email && ADMIN_EMAILS.includes(user.email.toLowerCase().trim()); }
 
     function getUsersDB() {
-      const data = localStorage.getItem(STORAGE_KEY_USERS);
-      if (data) {
-        try { return JSON.parse(data); } catch(e) {}
-      }
-      const defaultUsers = [
-        { name: 'ผู้ดูแลระบบ (Admin)', email: 'admin@gusso.com', password: 'admin123' },
-        { name: 'สมชาย สายอ่าน', email: 'somchai@email.com', password: 'password123' }
-      ];
-      localStorage.setItem(STORAGE_KEY_USERS, JSON.stringify(defaultUsers));
-      return defaultUsers;
+      let data = localStorage.getItem(STORAGE_KEY_USERS);
+      if (data) { try { return JSON.parse(data); } catch(e){} }
+      let defaults = [{ name: 'ผู้ดูแลระบบ', email: 'admin@gusso.com', password: 'admin123' }, { name: 'สมชาย สายอ่าน', email: 'somchai@email.com', password: 'password123' }];
+      localStorage.setItem(STORAGE_KEY_USERS, JSON.stringify(defaults));
+      return defaults;
     }
+    function saveUsersDB(u) { localStorage.setItem(STORAGE_KEY_USERS, JSON.stringify(u)); }
 
-    function saveUsersDB(users) {
-      localStorage.setItem(STORAGE_KEY_USERS, JSON.stringify(users));
-      updateAdminUserCount();
+    function getBooksDB() {
+      let data = localStorage.getItem(STORAGE_KEY_BOOKS);
+      if (data) { try { return JSON.parse(data); } catch(e){} }
+      let defaults = [
+        { id: 1, title: 'ผจญภัยในแดนเวทมนตร์ เล่มหนึ่ง', author: 'ภานุวัฒน์ แสงอรุณ', category: 'วรรณกรรมและนิยาย', price: 199.00, available: true, cover: 'images/magic1.jpg', synopsis: 'การเดินทางของเด็กหนุ่มผู้ค้นพบพลังเวทมนตร์โบราณในป่าลึกลับ ต้องเผชิญหน้ากับอุปสรรคและสัตว์ประหลาดเพื่อปกป้องอาณาจักรจากการล่มสลาย เหมาะสำหรับผู้ที่ชื่นชอบเรื่องราวดลใจและแฟนตาซีตื่นเต้น', highlights: ['ระบบเวทมนตร์โบราณ', 'การเติบโตของตัวละคร', 'ฉากต่อสู้แฟนตาซี'] },
+        { id: 2, title: 'พลังแห่งนิสัยเล็กๆ อะตอมิก ไลฟ์', author: 'กรกช ชัยสิทธิ์', category: 'จิตวิทยาและพัฒนาตนเอง', price: 250.00, available: true, cover: 'images/atomic.jpg', synopsis: 'เจาะลึกจิตวิทยาการสร้างนิสัยที่ทรงพลัง เปลี่ยนแปลงชีวิตทีละ 1% ในแต่ละวันด้วยหลักการทางวิทยาศาสตร์พฤติกรรม เพื่อผลลัพธ์ที่ยิ่งใหญ่ในระยะยาว', highlights: ['วิธีสร้างนิสัยเชิงบวก', 'การทำลายพฤติกรรมแย่ๆ', 'ระบบความสำเร็จอัตโนมัติ'] },
+        { id: 3, title: 'เรียนรู้ SQL ศูนย์สู่โปร', author: 'กรกช ชัยสิทธิ์', category: 'เทคโนโลยีและคอมพิวเตอร์', price: 350.00, available: true, cover: 'images/sql.jpg', synopsis: 'คู่มือปูพื้นฐานฐานข้อมูลเชิงสัมพันธ์และการเขียนคำสั่ง SQL ตั้งแต่ระดับเริ่มต้นจนถึงขั้นสูง เหมาะสำหรับนักเรียน นักพัฒนา และผู้ที่ต้องการย้ายสายงาน', highlights: ['Basic Queries & Joins', 'Database Design & ER', 'Performance Tuning'] },
+        { id: 4, title: 'จิตวิทยาการลงทุนในยุค AI', author: 'กรกช ชัยสิทธิ์', category: 'การเงินและการลงทุน', price: 290.00, available: true, cover: 'images/invest.jpg', synopsis: 'วิเคราะห์แนวคิดทางการเงิน ท่ามกลางกระแสปัญญาประดิษฐ์พลิกโลก รู้วิธีบริหารความเสี่ยง จิตวิทยาการเทรด และการจัดพอร์ตทรัพย์สินเพื่อความมั่งคั่ง', highlights: ['จิตวิทยาการลงทุน', 'กลยุทธ์พอร์ตยุค AI', 'การบริหารความเสี่ยง'] },
+        { id: 5, title: 'ผจญภัยในแดนเวทมนตร์ เล่มสอง', author: 'กรกช ชัยสิทธิ์', category: 'วรรณกรรมและนิยาย', price: 219.00, available: true, cover: 'images/magic2.jpg', synopsis: 'ภาคต่อสุดเข้มข้นของการผจญภัยในอาณาจักรเวทมนตร์ เมื่อความลับเบื้องหลังพันธสัญญาโบราณถูกเปิดเผย สงครามครั้งใหม่จึงอุบัติขึ้น', highlights: ['สงครามเวทมนตร์', 'พันธมิตรต่างเผ่าพันธุ์', 'บทสรุปสุดประทับใจ'] },
+        { id: 6, title: 'สร้างเว็บด้วย HTML & Modern CSS', author: 'กรกช ชัยสิทธิ์', category: 'เทคโนโลยีและคอมพิวเตอร์', price: 280.00, available: false, cover: 'images/webdev.jpg', synopsis: 'หลักสูตรเร่งรัดการพัฒนาเว็บสมัยใหม่ด้วย HTML5 และ Tailwind CSS พร้อมตัวอย่างโปรเจกต์จริงที่นำไปต่อยอดประกอบอาชีพได้ทันที', highlights: ['Responsive Web Design', 'Tailwind CSS Utility', 'Project Deployment'] }
+      ];
+      localStorage.setItem(STORAGE_KEY_BOOKS, JSON.stringify(defaults));
+      return defaults;
     }
+    function saveBooksDB(b) { localStorage.setItem(STORAGE_KEY_BOOKS, JSON.stringify(b)); }
+
+    function getOrdersDB() {
+      let data = localStorage.getItem(STORAGE_KEY_ORDERS);
+      if (data) { try { return JSON.parse(data); } catch(e){} }
+      return [];
+    }
+    function saveOrdersDB(o) { localStorage.setItem(STORAGE_KEY_ORDERS, JSON.stringify(o)); }
 
     function getCurrentUser() {
-      const session = localStorage.getItem(STORAGE_KEY_SESSION);
-      if (session) {
-        try { return JSON.parse(session); } catch(e) {}
-      }
+      let s = localStorage.getItem(STORAGE_KEY_SESSION);
+      if (s) { try { return JSON.parse(s); } catch(e){} }
       return null;
     }
-
-    function setCurrentUser(user) {
-      if (user) {
-        localStorage.setItem(STORAGE_KEY_SESSION, JSON.stringify(user));
-      } else {
-        localStorage.removeItem(STORAGE_KEY_SESSION);
-      }
+    function setCurrentUser(u) {
+      if (u) localStorage.setItem(STORAGE_KEY_SESSION, JSON.stringify(u));
+      else localStorage.removeItem(STORAGE_KEY_SESSION);
       updateAuthUI();
     }
 
     function updateAuthUI() {
-      const user = getCurrentUser();
-      const userLoggedInBlock = document.getElementById('userLoggedInBlock');
-      const userGuestBlock = document.getElementById('userGuestBlock');
-      const adminNavContainer = document.getElementById('adminNavContainer');
-      const adminBadge = document.getElementById('adminBadge');
+      let user = getCurrentUser();
+      let loggedBlock = document.getElementById('userLoggedInBlock');
+      let guestBlock = document.getElementById('userGuestBlock');
+      let navAdmin = document.getElementById('navAdmin');
+      let navMyOrders = document.getElementById('navMyOrders');
+      let adminBadge = document.getElementById('adminBadge');
 
       if (user) {
-        userLoggedInBlock.classList.remove('hidden');
-        userLoggedInBlock.classList.add('flex');
-        userGuestBlock.classList.add('hidden');
+        loggedBlock.classList.remove('hidden'); loggedBlock.classList.add('flex');
+        guestBlock.classList.add('hidden');
+        navMyOrders.classList.remove('hidden');
         document.getElementById('currentUserLabel').innerText = user.name;
         document.getElementById('currentEmailLabel').innerText = user.email;
-
         if (isAdminUser(user)) {
-          adminNavContainer.classList.remove('hidden');
-          adminNavContainer.classList.add('flex');
-          if (adminBadge) adminBadge.classList.remove('hidden');
+          navAdmin.classList.remove('hidden');
+          adminBadge.classList.remove('hidden');
         } else {
-          adminNavContainer.classList.add('hidden');
-          adminNavContainer.classList.remove('flex');
-          if (adminBadge) adminBadge.classList.add('hidden');
-          if (!document.getElementById('viewAdmin').classList.contains('hidden')) {
-            showViewSilently('store');
-          }
+          navAdmin.classList.add('hidden');
+          adminBadge.classList.add('hidden');
         }
       } else {
-        userLoggedInBlock.classList.add('hidden');
-        userLoggedInBlock.classList.remove('flex');
-        userGuestBlock.classList.remove('hidden');
-        adminNavContainer.classList.add('hidden');
-        adminNavContainer.classList.remove('flex');
-        if (adminBadge) adminBadge.classList.add('hidden');
-        if (!document.getElementById('viewAdmin').classList.contains('hidden')) {
-          showViewSilently('store');
-        }
+        loggedBlock.classList.add('hidden');
+        guestBlock.classList.remove('hidden');
+        navAdmin.classList.add('hidden');
+        navMyOrders.classList.add('hidden');
+        adminBadge.classList.add('hidden');
+        if(['viewAdmin', 'viewMyOrders'].includes(currentView)) switchView('store');
       }
-      updateAdminUserCount();
     }
 
-    function updateAdminUserCount() {
-      const users = getUsersDB();
-      const el = document.getElementById('totalUsersCount');
-      if (el) el.innerText = `${users.length} บัญชี`;
+    let currentView = 'store';
+    function switchView(view) {
+      currentView = view;
+      ['viewStore', 'viewMyOrders', 'viewAdmin'].forEach(id => document.getElementById(id).classList.add('hidden'));
+      ['navStore', 'navMyOrders', 'navAdmin'].forEach(id => document.getElementById(id).className = "px-3 sm:px-4 py-1.5 rounded-lg text-xs sm:text-sm font-semibold text-slate-600 hover:text-brand-600 transition");
+
+      if (view === 'store') {
+        document.getElementById('viewStore').classList.remove('hidden');
+        document.getElementById('navStore').className = "px-3 sm:px-4 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition bg-white text-brand-600 shadow-sm";
+      } else if (view === 'myOrders') {
+        document.getElementById('viewMyOrders').classList.remove('hidden');
+        document.getElementById('navMyOrders').className = "px-3 sm:px-4 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition bg-white text-brand-600 shadow-sm";
+        renderMyOrders();
+      } else if (view === 'admin') {
+        let user = getCurrentUser();
+        if (!isAdminUser(user)) { alert('เฉพาะผู้ดูแลระบบเท่านั้น'); switchView('store'); return; }
+        document.getElementById('viewAdmin').classList.remove('hidden');
+        document.getElementById('navAdmin').className = "px-3 sm:px-4 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition bg-white text-brand-600 shadow-sm";
+        renderAdminBooks();
+      }
     }
 
-    function openAuthModal(mode = 'login') {
+    function openAuthModal(mode='login') {
       switchAuthMode(mode);
       document.getElementById('authModal').classList.remove('hidden');
     }
-
-    function closeAuthModal() {
-      document.getElementById('authModal').classList.add('hidden');
-    }
-
+    function closeAuthModal() { document.getElementById('authModal').classList.add('hidden'); }
     function switchAuthMode(mode) {
-      const isLogin = mode === 'login';
-      const isReg = mode === 'register';
-      const isForgot = mode === 'forgot';
-
-      if (isLogin) document.getElementById('authModalTitle').innerText = 'เข้าสู่ระบบ GusSo';
-      else if (isReg) document.getElementById('authModalTitle').innerText = 'สมัครสมาชิก GusSo';
-      else if (isForgot) document.getElementById('authModalTitle').innerText = 'ลืมรหัสผ่าน (ส่งลิงก์ไปยังอีเมล)';
-
-      document.getElementById('formLogin').classList.toggle('hidden', !isLogin);
-      document.getElementById('formRegister').classList.toggle('hidden', !isReg);
-      document.getElementById('formForgot').classList.toggle('hidden', !isForgot);
+      document.getElementById('formLogin').classList.toggle('hidden', mode !== 'login');
+      document.getElementById('formRegister').classList.toggle('hidden', mode !== 'register');
+      document.getElementById('formForgot').classList.toggle('hidden', mode !== 'forgot');
     }
 
     function handleRegisterSubmit(e) {
       e.preventDefault();
-      const name = document.getElementById('regName').value.trim();
-      const email = document.getElementById('regEmail').value.trim().toLowerCase();
-      const password = document.getElementById('regPassword').value;
-      const consent = document.getElementById('regConsent').checked;
-
-      if (!consent) {
-        alert('กรุณากดยินยอมให้บันทึก Data เพื่อใช้ข้อมูลเข้าสู่ระบบ');
-        return;
-      }
-
+      let name = document.getElementById('regName').value.trim();
+      let email = document.getElementById('regEmail').value.trim().toLowerCase();
+      let password = document.getElementById('regPassword').value;
       let users = getUsersDB();
-      if (users.some(u => u.email === email)) {
-        alert('อีเมลนี้ถูกใช้งานแล้ว กรุณาใช้อีเมลอื่นหรือเข้าสู่ระบบ');
-        return;
-      }
-
-      const newUser = { name, email, password };
-      users.push(newUser);
-      saveUsersDB(users);
-      setCurrentUser(newUser);
-
-      alert(`สมัครสมาชิกสำเร็จ!\nยินดีต้อนรับคุณ ${name}`);
-      closeAuthModal();
-      document.getElementById('formRegister').reset();
+      if (users.some(u => u.email === email)) { alert('อีเมลนี้ถูกใช้งานแล้ว'); return; }
+      let newUser = { name, email, password };
+      users.push(newUser); saveUsersDB(users); setCurrentUser(newUser);
+      alert('สมัครสมาชิกสำเร็จ!'); closeAuthModal();
     }
 
     function handleLoginSubmit(e) {
       e.preventDefault();
-      const email = document.getElementById('loginEmail').value.trim().toLowerCase();
-      const password = document.getElementById('loginPassword').value;
-
-      const users = getUsersDB();
-      const found = users.find(u => u.email === email && u.password === password);
-
-      if (found) {
-        setCurrentUser(found);
-        if (isAdminUser(found)) {
-          alert(`เข้าสู่ระบบสำเร็จในฐานะ [ผู้ดูแลระบบ Admin]!\nเมนูจัดการหลังบ้านเปิดให้ใช้งานแล้ว`);
-        } else {
-          alert(`เข้าสู่ระบบสำเร็จ! สวัสดีคุณ ${found.name}`);
-        }
-        closeAuthModal();
-        document.getElementById('formLogin').reset();
-      } else {
-        alert('อีเมลหรือรหัสผ่านไม่ถูกต้อง กรุณาลองใหม่อีกครั้ง');
-      }
+      let email = document.getElementById('loginEmail').value.trim().toLowerCase();
+      let password = document.getElementById('loginPassword').value;
+      let users = getUsersDB();
+      let found = users.find(u => u.email === email && u.password === password);
+      if (found) { setCurrentUser(found); alert('เข้าสู่ระบบสำเร็จ!'); closeAuthModal(); }
+      else alert('อีเมลหรือรหัสผ่านไม่ถูกต้อง');
     }
 
     function handleForgotSubmit(e) {
       e.preventDefault();
-      const userEmail = document.getElementById('forgotEmail').value.trim().toLowerCase();
-      const users = getUsersDB();
-      const found = users.find(u => u.email === userEmail);
-
-      if (!found) {
-        alert('ไม่พบอีเมลนี้ในระบบ Data กรุณาตรวจสอบอีเมลที่เคยสมัครไว้');
-        return;
-      }
-
-      const currentPath = window.location.pathname;
-      const basePath = currentPath.substring(0, currentPath.lastIndexOf('/') + 1);
-      const resetLink = `${window.location.origin}${basePath}reset-password.html?email=${encodeURIComponent(userEmail)}`;
-
-      const submitBtn = document.getElementById('btnForgotSubmit');
-      submitBtn.innerText = 'กำลังส่งอีเมลจริง...';
-      submitBtn.disabled = true;
-
-      const templateParams = {
-        email: userEmail,
-        link: resetLink
-      };
-
-      emailjs.send('service_5t8qqtj', 'template_1ln8ve7', templateParams)
-        .then(function(response) {
-          alert(`ส่งอีเมลสำเร็จแล้ว!\nระบบได้ส่งลิงก์รีเซ็ตรหัสผ่านไปยัง: ${userEmail}`);
-          closeAuthModal();
-          document.getElementById('formForgot').reset();
-        })
-        .catch(function(error) {
-          alert('เกิดข้อผิดพลาดในการส่งอีเมล: ' + JSON.stringify(error));
-        })
-        .finally(function() {
-          submitBtn.innerText = 'ส่งลิงก์รีเซ็ตรหัสผ่านไปยังอีเมลจริง';
-          submitBtn.disabled = false;
-        });
+      let email = document.getElementById('forgotEmail').value.trim().toLowerCase();
+      let users = getUsersDB();
+      if (!users.some(u => u.email === email)) { alert('ไม่พบอีเมลนี้ในระบบ'); return; }
+      let link = `${window.location.origin}${window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/')+1)}reset-password.html?email=${encodeURIComponent(email)}`;
+      emailjs.send('service_5t8qqtj', 'template_1ln8ve7', { email, link }).then(() => {
+        alert('ส่งลิงก์รีเซ็ตไปที่อีเมลแล้ว'); closeAuthModal();
+      }).catch(err => alert('ส่งอีเมลไม่สำเร็จ: ' + JSON.stringify(err)));
     }
 
-    function handleLogout() {
-      if (confirm('คุณต้องการออกจากระบบหรือไม่?')) {
-        setCurrentUser(null);
-        alert('ออกจากระบบเรียบร้อยแล้ว');
-      }
-    }
+    function handleLogout() { setCurrentUser(null); alert('ออกจากระบบแล้ว'); }
 
-    function showViewSilently(view) {
-      document.getElementById('viewStore').classList.add('hidden');
-      document.getElementById('viewAdmin').classList.add('hidden');
-
-      document.getElementById('navStore').className = "px-3 sm:px-4 py-1.5 rounded-lg text-xs sm:text-sm font-semibold text-slate-600 hover:text-brand-600 transition";
-      document.getElementById('navAdmin').className = "px-3 sm:px-4 py-1.5 rounded-lg text-xs sm:text-sm font-semibold text-slate-600 hover:text-brand-600 transition";
-
-      if (view === 'store') {
-        document.getElementById('viewStore').classList.remove('hidden');
-        document.getElementById('navStore').className = "px-3 sm:px-4 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition bg-white text-brand-600 shadow-sm";
-      }
-    }
-
-    function switchView(view) {
-      if (view === 'admin') {
-        const user = getCurrentUser();
-        if (!isAdminUser(user)) {
-          alert('เมนูนี้สงวนสิทธิ์เฉพาะผู้ดูแลระบบ (admin@gusso.com) เท่านั้น');
-          return;
-        }
-      }
-
-      document.getElementById('viewStore').classList.add('hidden');
-      document.getElementById('viewAdmin').classList.add('hidden');
-
-      document.getElementById('navStore').className = "px-3 sm:px-4 py-1.5 rounded-lg text-xs sm:text-sm font-semibold text-slate-600 hover:text-brand-600 transition";
-      document.getElementById('navAdmin').className = "px-3 sm:px-4 py-1.5 rounded-lg text-xs sm:text-sm font-semibold text-slate-600 hover:text-brand-600 transition";
-
-      if (view === 'store') {
-        document.getElementById('viewStore').classList.remove('hidden');
-        document.getElementById('navStore').className = "px-3 sm:px-4 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition bg-white text-brand-600 shadow-sm";
-      } else if (view === 'admin') {
-        document.getElementById('viewAdmin').classList.remove('hidden');
-        document.getElementById('navAdmin').className = "px-3 sm:px-4 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition bg-white text-brand-600 shadow-sm";
-        renderAdmin();
-      }
-    }
-
-    function switchAdminSubtab(tab) {
-      const isStore = tab === 'store';
-      document.getElementById('adminStorePanel').classList.toggle('hidden', !isStore);
-      document.getElementById('adminCpuPanel').classList.toggle('hidden', isStore);
-
-      document.getElementById('adminSubtabStoreBtn').className = isStore 
-        ? "px-4 py-2 rounded-xl text-xs font-bold bg-white text-brand-600 shadow-sm transition"
-        : "px-4 py-2 rounded-xl text-xs font-bold text-slate-600 hover:text-brand-600 transition";
-
-      document.getElementById('adminSubtabCpuBtn').className = !isStore 
-        ? "px-4 py-2 rounded-xl text-xs font-bold bg-white text-brand-600 shadow-sm transition"
-        : "px-4 py-2 rounded-xl text-xs font-bold text-slate-600 hover:text-brand-600 transition";
-    }
-
-    // 1. หนังสือ
-    let books = [
-      { id: 1, title: 'ผจญภัยในแดนเวทมนตร์ เล่มหนึ่ง', author: 'ภานุวัฒน์ แสงอรุณ', category: 'วรรณกรรมและนิยาย', price: 199.00, available: true, cover: 'images/magic1.jpg', synopsis: 'เรื่องราวของเด็กหนุ่มผู้ค้นพบพลังเวทมนตร์โบราณ...', highlights: ['แฟนตาซี', 'เวทมนตร์'] },
-      { id: 2, title: 'พลังแห่งนิสัยเล็กๆ อะตอมิก ไลฟ์', author: 'กรกช ชัยสิทธิ์', category: 'จิตวิทยาและพัฒนาตนเอง', price: 250.00, available: true, cover: 'images/atomic.jpg', synopsis: 'การเปลี่ยนแปลง 1% ในแต่ละวัน...', highlights: ['สร้างนิสัย', 'พัฒนาตนเอง'] },
-      { id: 3, title: 'เรียนรู้ SQL ศูนย์สู่โปร', author: 'กรกช ชัยสิทธิ์', category: 'เทคโนโลยีและคอมพิวเตอร์', price: 350.00, available: true, cover: 'images/sql.jpg', synopsis: 'คู่มือ SQL และฐานข้อมูล...', highlights: ['Database', 'SQL'] },
-      { id: 4, title: 'จิตวิทยาการลงทุนในยุค AI', author: 'กรกช ชัยสิทธิ์', category: 'การเงินและการลงทุน', price: 290.00, available: true, cover: 'images/invest.jpg', synopsis: 'การลงทุนยุคปัญญาประดิษฐ์...', highlights: ['การลงทุน', 'AI'] },
-      { id: 5, title: 'ผจญภัยในแดนเวทมนตร์ เล่มสอง', author: 'กรกช ชัยสิทธิ์', category: 'วรรณกรรมและนิยาย', price: 219.00, available: true, cover: 'images/magic2.jpg', synopsis: 'ภาคต่อสุดเข้มข้น...', highlights: ['ผจญภัย', 'เวทมนตร์'] },
-      { id: 6, title: 'สร้างเว็บด้วย HTML & Modern CSS', author: 'กรกช ชัยสิทธิ์', category: 'เทคโนโลยีและคอมพิวเตอร์', price: 280.00, available: false, cover: 'images/webdev.jpg', synopsis: 'พัฒนาเว็บไซต์สมัยใหม่...', highlights: ['HTML/CSS', 'Web Dev'] }
-    ];
-
-    let cart = [];
-    let checkoutItems = [];
-
+    // Storefront Logic
+    let cart = [], checkoutItems = [];
     function renderBooks() {
-      const search = document.getElementById('searchInput').value.toLowerCase();
-      const cat = document.getElementById('categoryFilter').value;
-      const grid = document.getElementById('bookGrid');
-
-      const filtered = books.filter(b => {
-        const matchSearch = b.title.toLowerCase().includes(search) || b.author.toLowerCase().includes(search);
-        const matchCat = cat === 'All' || b.category === cat;
-        return matchSearch && matchCat;
-      });
+      let books = getBooksDB();
+      let search = document.getElementById('searchInput').value.toLowerCase();
+      let cat = document.getElementById('categoryFilter').value;
+      let grid = document.getElementById('bookGrid');
+      let filtered = books.filter(b => (b.title.toLowerCase().includes(search) || b.author.toLowerCase().includes(search)) && (cat === 'All' || b.category === cat));
 
       grid.innerHTML = filtered.map(b => `
         <div class="bg-white rounded-2xl p-4 border border-brand-200 shadow-sm flex flex-col justify-between hover:shadow-md transition">
           <div>
-            <div class="h-60 w-full rounded-xl overflow-hidden mb-3 bg-slate-100 cursor-pointer border border-brand-100 shadow-sm" onclick="openBookDetail(${b.id})">
-              <img src="${b.cover}" alt="${b.title}" class="w-full h-full object-cover hover:scale-105 transition duration-300">
+            <div class="h-60 w-full rounded-xl overflow-hidden mb-3 bg-slate-100 cursor-pointer border shadow-sm" onclick="openBookDetail(${b.id})">
+              <img src="${b.cover}" class="w-full h-full object-cover hover:scale-105 transition duration-300">
             </div>
             <span class="text-[11px] px-2.5 py-0.5 bg-brand-50 text-brand-600 rounded-full font-medium">${b.category}</span>
             <h4 class="font-bold text-sm sm:text-base mt-2 text-slate-800 line-clamp-1 cursor-pointer hover:text-brand-600" onclick="openBookDetail(${b.id})">${b.title}</h4>
-            <p class="text-xs text-slate-500 mb-1">ผู้แต่ง: ${b.author}</p>
-            <button onclick="openBookDetail(${b.id})" class="text-[11px] text-brand-600 hover:underline font-medium block mb-2">🔍 ดูเนื้อหา / เรื่องย่อ</button>
+            <p class="text-xs text-slate-500 mb-2">ผู้แต่ง: ${b.author}</p>
           </div>
-          <div class="pt-3 border-t border-slate-100 flex items-center justify-between mt-2">
-            <span class="text-base sm:text-lg font-bold text-brand-600">฿${b.price.toFixed(2)}</span>
-            ${b.available 
-              ? `<button onclick="addToCart(${b.id})" class="px-3 py-1.5 bg-brand-500 hover:bg-brand-600 text-white text-xs font-semibold rounded-lg shadow transition">+ เพิ่มในตะกร้า</button>`
-              : `<span class="text-xs text-rose-500 font-semibold bg-rose-50 px-2 py-1 rounded">สินค้าหมด</span>`
-            }
+          <div class="pt-3 border-t flex items-center justify-between">
+            <span class="text-base font-bold text-brand-600">฿${b.price.toFixed(2)}</span>
+            ${b.available ? `<button onclick="addToCart(${b.id})" class="px-3 py-1.5 bg-brand-500 hover:bg-brand-600 text-white text-xs font-semibold rounded-lg shadow">+ เพิ่มลงตะกร้า</button>` : `<span class="text-xs text-rose-500 font-semibold bg-rose-50 px-2 py-1 rounded">หมด</span>`}
           </div>
         </div>
       `).join('');
     }
 
     function openBookDetail(id) {
-      const book = books.find(b => b.id === id);
+      let book = getBooksDB().find(b => b.id === id);
       if (!book) return;
       document.getElementById('detailBookCover').src = book.cover;
       document.getElementById('detailCategory').innerText = book.category;
@@ -849,248 +709,319 @@
       document.getElementById('detailSynopsis').innerText = book.synopsis;
       document.getElementById('detailHighlights').innerHTML = book.highlights.map(h => `<li>${h}</li>`).join('');
       
-      const addBtn = document.getElementById('detailAddToCartBtn');
-      if (book.available) {
-        addBtn.disabled = false;
-        addBtn.innerText = '+ เพิ่มลงตะกร้า';
-        addBtn.className = "flex-1 py-2.5 bg-brand-500 hover:bg-brand-600 text-white rounded-xl text-xs font-semibold shadow transition";
-        addBtn.onclick = () => { addToCart(book.id); closeBookDetail(); };
-      } else {
-        addBtn.disabled = true;
-        addBtn.innerText = 'สินค้าหมดชั่วคราว';
-        addBtn.className = "flex-1 py-2.5 bg-slate-300 text-slate-500 rounded-xl text-xs font-semibold cursor-not-allowed";
-        addBtn.onclick = null;
-      }
+      let addBtn = document.getElementById('detailAddToCartBtn');
+      addBtn.disabled = !book.available;
+      addBtn.innerText = book.available ? '+ เพิ่มลงตะกร้าสินค้า' : 'สินค้าหมด';
+      addBtn.className = book.available ? "flex-1 py-3 bg-brand-500 hover:bg-brand-600 text-white rounded-xl text-xs font-semibold shadow transition" : "flex-1 py-3 bg-slate-300 text-slate-500 rounded-xl text-xs font-semibold cursor-not-allowed";
+      if(book.available) addBtn.onclick = () => { addToCart(book.id); closeBookDetail(); };
       document.getElementById('bookDetailModal').classList.remove('hidden');
     }
-
     function closeBookDetail() { document.getElementById('bookDetailModal').classList.add('hidden'); }
+
     function addToCart(id) {
-      const book = books.find(b => b.id === id);
-      if (cart.find(c => c.id === id)) { alert('หนังสือเล่มนี้อยู่ในตะกร้าแล้ว'); return; }
-      cart.push(book);
-      updateCartUI();
+      let book = getBooksDB().find(b => b.id === id);
+      if (cart.find(c => c.id === id)) { alert('อยู่ในตะกร้าแล้ว'); return; }
+      cart.push(book); updateCartUI();
     }
     function removeFromCart(id) { cart = cart.filter(c => c.id !== id); updateCartUI(); }
     function updateCartUI() {
       document.getElementById('cartBadge').innerText = cart.length;
-      const list = document.getElementById('cartList');
-      const total = cart.reduce((acc, cur) => acc + cur.price, 0);
+      let list = document.getElementById('cartList');
+      let total = cart.reduce((a,c) => a + c.price, 0);
       document.getElementById('cartTotal').innerText = `฿${total.toFixed(2)}`;
-      if (cart.length === 0) { list.innerHTML = '<p class="text-center text-slate-400 py-10 text-sm">ยังไม่มีรายการหนังสือในตะกร้า</p>'; return; }
+      if (cart.length === 0) { list.innerHTML = '<p class="text-center text-slate-400 py-10 text-sm">ไม่มีสินค้าในตะกร้า</p>'; return; }
       list.innerHTML = cart.map(item => `
-        <div class="flex justify-between items-center bg-brand-50/70 p-3 rounded-xl border border-brand-100">
+        <div class="flex justify-between items-center bg-brand-50/70 p-3 rounded-xl border">
           <div class="flex items-center gap-3">
-            <img src="${item.cover}" class="w-10 h-14 object-cover rounded-lg shadow-sm border border-slate-200">
-            <div>
-              <div class="text-xs font-bold text-slate-800 line-clamp-1">${item.title}</div>
-              <div class="text-xs text-brand-600 font-semibold mt-0.5">฿${item.price.toFixed(2)}</div>
-            </div>
+            <img src="${item.cover}" class="w-10 h-14 object-cover rounded-lg">
+            <div><div class="text-xs font-bold text-slate-800">${item.title}</div><div class="text-xs text-brand-600 font-semibold">฿${item.price.toFixed(2)}</div></div>
           </div>
-          <button onclick="removeFromCart(${item.id})" class="text-rose-500 hover:text-rose-700 text-xs px-2 py-1">ลบ</button>
+          <button onclick="removeFromCart(${item.id})" class="text-rose-500 text-xs px-2 py-1">ลบ</button>
         </div>
       `).join('');
     }
     function openCart() { document.getElementById('cartModal').classList.remove('hidden'); }
     function closeCart() { document.getElementById('cartModal').classList.add('hidden'); }
+
     function openCheckout() {
-      if (cart.length === 0) { alert('กรุณาเลือกหนังสือลงตะกร้าก่อนทำรายการ'); return; }
-      const user = getCurrentUser();
-      if (!user) { alert('กรุณาเข้าสู่ระบบก่อนทำการสั่งซื้อ'); openAuthModal('login'); return; }
-      const total = cart.reduce((acc, cur) => acc + cur.price, 0);
-      document.getElementById('payAmountLabel').innerText = `ยอดชำระ: ฿${total.toFixed(2)}`;
+      if (cart.length === 0) { alert('ตะกร้าว่างเปล่า'); return; }
+      let user = getCurrentUser();
+      if (!user) { alert('กรุณาเข้าสู่ระบบก่อน'); openAuthModal('login'); return; }
       checkoutItems = [...cart];
-      closeCart();
-      document.getElementById('checkoutModal').classList.remove('hidden');
+      document.getElementById('payAmountLabel').innerText = `ยอดชำระ: ฿${checkoutItems.reduce((a,c)=>a+c.price,0).toFixed(2)}`;
+      closeCart(); document.getElementById('checkoutModal').classList.remove('hidden');
     }
     function closeCheckout() { document.getElementById('checkoutModal').classList.add('hidden'); }
 
     function confirmPayment() {
       closeCheckout();
-      const user = getCurrentUser() || { name: 'ลูกค้าทั่วไป', email: 'guest@email.com' };
-      const total = checkoutItems.reduce((acc, cur) => acc + cur.price, 0);
-      const receiptNo = 'RCP-2026-' + Math.floor(1000 + Math.random() * 9000);
-      const now = new Date().toLocaleString('th-TH');
-      const orderWithTokens = checkoutItems.map(item => ({ ...item, token: '/download/token_' + Math.random().toString(36).substring(2, 8) }));
+      let user = getCurrentUser();
+      let total = checkoutItems.reduce((a,c) => a + c.price, 0);
+      let receiptNo = 'RCP-2026-' + Math.floor(1000 + Math.random() * 9000);
+      let now = new Date().toLocaleString('th-TH');
+      let orderItems = checkoutItems.map(item => ({ ...item, token: '/download/token_' + Math.random().toString(36).substring(2, 8) }));
 
-      const itemsHtml = orderWithTokens.map(c => `
-        <div style="margin-bottom: 12px;">
-          <table width="100%" cellpadding="0" cellspacing="0" border="0">
-            <tr>
-              <td style="font-size: 13px; font-weight: bold; color: #1e293b;">${c.title} <span style="font-size: 11px; color: #64748b;">(x1)</span></td>
-              <td align="right" style="font-size: 13px; font-weight: bold; color: #0f172a;">฿${c.price.toFixed(2)}</td>
-            </tr>
-            <tr>
-              <td colspan="2" style="padding-top: 4px;"><span style="display: inline-block; font-size: 10px; color: #0284c7; background: #e0f2fe; padding: 2px 8px; border-radius: 4px; font-family: monospace;">📥 ลิงก์ดาวน์โหลด: ${c.token}</span></td>
-            </tr>
-          </table>
-        </div>
-      `).join('');
+      let orders = getOrdersDB();
+      orders.push({ receiptNo, email: user.email, name: user.name, date: now, items: orderItems, total, status: 'ยืนยันแล้ว' });
+      saveOrdersDB(orders);
 
+      let itemsHtml = orderItems.map(c => `<div style="margin-bottom:8px;"><b>${c.title}</b> - ฿${c.price.toFixed(2)}<br><span style="font-size:10px; color:#0284c7;">ลิงก์ดาวน์โหลด: ${c.token}</span></div>`).join('');
       emailjs.send('service_5t8qqtj', 'template_cudu5ko', { email: user.email, name: user.name, receipt_no: receiptNo, date: now, items_html: itemsHtml, total_price: `฿${total.toFixed(2)}` });
 
-      document.getElementById('receiptNoticeEmail').innerText = `📧 ส่งใบเสร็จคำสั่งซื้อจริงไปยังอีเมล: ${user.email} แล้ว`;
-      document.getElementById('receiptContent').innerHTML = `
-        <div class="border-b border-dashed border-slate-300 pb-2 mb-2">
-          <div class="font-bold text-sm text-slate-800">ใบเสร็จรับเงินอิเล็กทรอนิกส์ (e-Receipt)</div>
-          <div>เลขที่: ${receiptNo} | วันที่: ${now}</div>
-          <div>ผู้ซื้อ: ${user.name} (${user.email})</div>
-          <div class="text-[11px] text-emerald-600 font-semibold mt-1">✓ ชำระเงินเรียบร้อยแล้ว</div>
-        </div>
-        <div class="py-2 border-b border-dashed border-slate-300 space-y-2">
-          ${orderWithTokens.map(c => `<div><div class="flex justify-between font-medium"><span>${c.title} (x1)</span><span>฿${c.price.toFixed(2)}</span></div><div class="text-[10px] text-brand-600 font-mono">📥 ลิงก์: ${c.token}</div></div>`).join('')}
-        </div>
-        <div class="flex justify-between font-bold pt-2 text-sm text-slate-800"><span>ยอดชำระทั้งสิ้น:</span><span class="text-brand-600">฿${total.toFixed(2)}</span></div>
-      `;
-      cart = [];
-      updateCartUI();
-      document.getElementById('receiptModal').classList.remove('hidden');
+      cart = []; updateCartUI();
+      alert('ชำระเงินสำเร็จ! ส่งใบเสร็จไปยังอีเมลของคุณเรียบร้อย');
+      switchView('myOrders');
     }
 
-    function closeReceipt() { document.getElementById('receiptModal').classList.add('hidden'); }
-    function toggleBookStatus(id) {
-      const book = books.find(b => b.id === id);
-      if (book) { book.available = !book.available; renderAdmin(); renderBooks(); }
+    // My Orders View
+    function renderMyOrders() {
+      let user = getCurrentUser();
+      if (!user) return;
+      let orders = getOrdersDB().filter(o => o.email.toLowerCase() === user.email.toLowerCase());
+      let container = document.getElementById('myOrdersList');
+      if (orders.length === 0) { container.innerHTML = '<div class="bg-white p-8 rounded-3xl text-center text-slate-400">คุณยังไม่มีประวัติคำสั่งซื้อสินค้า</div>'; return; }
+
+      container.innerHTML = orders.map(o => `
+        <div class="bg-white rounded-3xl p-6 border shadow-sm space-y-4">
+          <div class="flex justify-between items-center border-b pb-3">
+            <div><span class="font-bold text-brand-600">${o.receiptNo}</span><span class="text-xs text-slate-400 ml-2">${o.date}</span></div>
+            <span class="px-3 py-1 bg-emerald-100 text-emerald-700 text-xs rounded-full font-bold">${o.status}</span>
+          </div>
+          <div class="space-y-2">
+            ${o.items.map(i => `
+              <div class="flex justify-between items-center bg-slate-50 p-3 rounded-xl">
+                <div class="flex items-center gap-3">
+                  <img src="${i.cover}" class="w-10 h-14 object-cover rounded">
+                  <div>
+                    <div class="text-xs font-bold text-slate-800">${i.title}</div>
+                    <div class="text-[11px] text-brand-600 font-mono mt-0.5">📥 ลิงก์ดาวน์โหลด: <b>${i.token}</b></div>
+                  </div>
+                </div>
+                <div class="text-xs font-bold">฿${i.price.toFixed(2)}</div>
+              </div>
+            `).join('')}
+          </div>
+          <div class="flex justify-between items-center pt-2 font-bold text-sm">
+            <span>ยอดชำระสุทธิ:</span>
+            <span class="text-brand-600">฿${o.total.toFixed(2)}</span>
+          </div>
+        </div>
+      `).join('');
     }
-    function renderAdmin() {
-      document.getElementById('adminBookList').innerHTML = books.map(b => `
+
+    // Admin Panel Logic
+    function switchAdminTab(tab) {
+      ['Books', 'Orders', 'Users', 'Cpu'].forEach(t => document.getElementById('adminPanel' + t).classList.add('hidden'));
+      ['books', 'orders', 'users', 'cpu'].forEach(t => document.getElementById('adminTab' + t.charAt(0).toUpperCase() + t.slice(1) + 'Btn').className = "px-3 py-2 rounded-xl text-xs font-bold text-slate-600 hover:text-brand-600 transition");
+
+      document.getElementById('adminPanel' + tab.charAt(0).toUpperCase() + tab.slice(1)).classList.remove('hidden');
+      document.getElementById('adminTab' + tab.charAt(0).toUpperCase() + tab.slice(1) + 'Btn').className = "px-3 py-2 rounded-xl text-xs font-bold bg-white text-brand-600 shadow-sm transition";
+
+      if(tab === 'books') renderAdminBooks();
+      if(tab === 'orders') renderAdminOrders();
+      if(tab === 'users') renderAdminUsers();
+      if(tab === 'cpu') generateRandomProblem(101);
+    }
+
+    function renderAdminBooks() {
+      let books = getBooksDB();
+      document.getElementById('adminBookTableList').innerHTML = books.map(b => `
         <tr class="hover:bg-brand-50/40">
-          <td class="p-4"><img src="${b.cover}" class="w-10 h-14 object-cover rounded-lg border border-slate-200 shadow-sm"></td>
+          <td class="p-4"><img src="${b.cover}" class="w-10 h-14 object-cover rounded border"></td>
           <td class="p-4 font-semibold text-slate-800">${b.title}</td>
           <td class="p-4 text-xs text-slate-500">${b.author}</td>
           <td class="p-4 text-slate-600">${b.category}</td>
           <td class="p-4 font-bold text-brand-600">฿${b.price.toFixed(2)}</td>
-          <td class="p-4"><span class="px-2.5 py-1 text-xs rounded-full font-semibold ${b.available ? 'bg-emerald-100 text-emerald-700' : 'bg-rose-100 text-rose-700'}">${b.available ? 'พร้อมจำหน่าย' : 'สินค้าหมด'}</span></td>
-          <td class="p-4 text-center"><button onclick="toggleBookStatus(${b.id})" class="text-xs px-3 py-1.5 border border-slate-200 rounded-lg hover:bg-white shadow-sm font-medium transition">สลับสถานะ</button></td>
+          <td class="p-4"><span class="px-2 py-1 text-xs rounded-full font-semibold ${b.available ? 'bg-emerald-100 text-emerald-700' : 'bg-rose-100 text-rose-700'}">${b.available ? 'พร้อมขาย' : 'หมด'}</span></td>
+          <td class="p-4 text-center space-x-1">
+            <button onclick="openBookFormModal(${b.id})" class="px-2.5 py-1 bg-sky-50 text-sky-600 rounded text-xs font-semibold">แก้ไข</button>
+            <button onclick="toggleBookStatus(${b.id})" class="px-2.5 py-1 border rounded text-xs">สลับสถานะ</button>
+          </td>
         </tr>
       `).join('');
     }
 
-    // CPU Scheduling
-    const subjectList = ['แบบฝึกหัด OS', 'รายงาน Database', 'สรุป English', 'แบบฝึกหัด Math', 'โครงงาน Web Dev', 'ทดลอง Network', 'การบ้าน Data Structures', 'สรุปสถิติวิจัย'];
-    let currentSeed = 101, tasks = [], timeQuantum = 2, currentAlgoTab = 'fcfs', calculatedData = {};
-    
-    function pseudoRandom(seed) {
-      let value = seed;
-      return function() { value = (value * 9301 + 49297) % 233280; return value / 233280; };
+    function openBookFormModal(id = null) {
+      if(id) {
+        let book = getBooksDB().find(b => b.id === id);
+        document.getElementById('bookFormTitle').innerText = 'แก้ไขข้อมูลหนังสือ';
+        document.getElementById('editBookId').value = book.id;
+        document.getElementById('formBookTitle').value = book.title;
+        document.getElementById('formBookAuthor').value = book.author;
+        document.getElementById('formBookCat').value = book.category;
+        document.getElementById('formBookPrice').value = book.price;
+        document.getElementById('formBookCover').value = book.cover;
+        document.getElementById('formBookSynopsis').value = book.synopsis;
+        document.getElementById('formBookHighlights').value = book.highlights.join(', ');
+      } else {
+        document.getElementById('bookFormTitle').innerText = 'เพิ่มหนังสือใหม่';
+        document.getElementById('editBookId').value = '';
+        document.getElementById('formBookTitle').value = '';
+        document.getElementById('formBookAuthor').value = '';
+        document.getElementById('formBookPrice').value = '';
+        document.getElementById('formBookSynopsis').value = '';
+        document.getElementById('formBookHighlights').value = '';
+      }
+      document.getElementById('bookFormModal').classList.remove('hidden');
     }
+    function closeBookFormModal() { document.getElementById('bookFormModal').classList.add('hidden'); }
+
+    function handleBookFormSubmit(e) {
+      e.preventDefault();
+      let id = document.getElementById('editBookId').value;
+      let books = getBooksDB();
+      let newItem = {
+        id: id ? parseInt(id) : Date.now(),
+        title: document.getElementById('formBookTitle').value,
+        author: document.getElementById('formBookAuthor').value,
+        category: document.getElementById('formBookCat').value,
+        price: parseFloat(document.getElementById('formBookPrice').value),
+        available: true,
+        cover: document.getElementById('formBookCover').value,
+        synopsis: document.getElementById('formBookSynopsis').value,
+        highlights: document.getElementById('formBookHighlights').value.split(',').map(s => s.trim())
+      };
+      if(id) {
+        let idx = books.findIndex(b => b.id === parseInt(id));
+        if(idx !== -1) books[idx] = newItem;
+      } else {
+        books.push(newItem);
+      }
+      saveBooksDB(books); closeBookFormModal(); renderAdminBooks(); renderBooks();
+      alert('บันทึกข้อมูลหนังสือสำเร็จ');
+    }
+
+    function toggleBookStatus(id) {
+      let books = getBooksDB();
+      let book = books.find(b => b.id === id);
+      if(book) { book.available = !book.available; saveBooksDB(books); renderAdminBooks(); renderBooks(); }
+    }
+
+    function renderAdminOrders() {
+      let orders = getOrdersDB();
+      let list = document.getElementById('adminOrdersTableList');
+      if(orders.length === 0) { list.innerHTML = '<tr><td colspan="6" class="p-4 text-center text-slate-400">ยังไม่มีคำสั่งซื้อในระบบ</td></tr>'; return; }
+      list.innerHTML = orders.map((o, idx) => `
+        <tr class="hover:bg-slate-50">
+          <td class="p-3 font-bold text-brand-600">${o.receiptNo}</td>
+          <td class="p-3">${o.name}<br><span class="text-[10px] text-slate-400">${o.email}</span></td>
+          <td class="p-3">${o.items.map(i=>i.title).join(', ')}</td>
+          <td class="p-3 font-bold">฿${o.total.toFixed(2)}</td>
+          <td class="p-3"><span class="px-2 py-0.5 bg-emerald-100 text-emerald-700 rounded text-[10px] font-bold">${o.status}</span></td>
+          <td class="p-3 text-center">
+            <button onclick="toggleOrderStatus(${idx})" class="px-2 py-1 border rounded text-[10px]">สลับสถานะ</button>
+          </td>
+        </tr>
+      `).join('');
+    }
+    function toggleOrderStatus(idx) {
+      let orders = getOrdersDB();
+      orders[idx].status = orders[idx].status === 'ยืนยันแล้ว' ? 'รอดำเนินการ' : 'ยืนยันแล้ว';
+      saveOrdersDB(orders); renderAdminOrders();
+    }
+
+    function renderAdminUsers() {
+      let users = getUsersDB();
+      document.getElementById('adminUsersTableList').innerHTML = users.map(u => `
+        <tr class="hover:bg-slate-50">
+          <td class="p-3 font-semibold">${u.name}</td>
+          <td class="p-3 text-slate-500">${u.email}</td>
+          <td class="p-3"><span class="px-2 py-0.5 rounded text-[10px] font-bold ${isAdminUser(u)?'bg-rose-100 text-rose-700':'bg-sky-100 text-sky-700'}">${isAdminUser(u)?'ADMIN':'USER'}</span></td>
+          <td class="p-3 text-center text-slate-400">ระบบมาตรฐาน</td>
+        </tr>
+      `).join('');
+    }
+
+    function exportToCSV() {
+      let books = getBooksDB();
+      let csv = 'ID,Title,Author,Category,Price,Available\n' + books.map(b => `${b.id},"${b.title}","${b.author}","${b.category}",${b.price},${b.available}`).join('\n');
+      let blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      let link = document.createElement('a'); link.href = URL.createObjectURL(blob); link.download = 'GusSo_Books_Report.csv'; link.click();
+    }
+
+    // CPU Scheduling Logic
+    const subjectList = ['OS Task', 'DB Query', 'API Fetch', 'Math Calc', 'Web Render', 'Network Ping'];
+    let currentSeed = 101, tasks = [], timeQuantum = 2, currentAlgoTab = 'fcfs', calculatedData = {};
+    function pseudoRandom(seed) { let v = seed; return () => { v = (v * 9301 + 49297) % 233280; return v / 233280; }; }
     function generateRandomProblem(customSeed = null) {
       currentSeed = customSeed !== null ? customSeed : Math.floor(Math.random() * 9000) + 1000;
       document.getElementById('inputSeed').value = currentSeed;
-      const rng = pseudoRandom(currentSeed), numTasks = parseInt(document.getElementById('selectNumTasks').value);
+      let rng = pseudoRandom(currentSeed), num = parseInt(document.getElementById('selectNumTasks').value);
       timeQuantum = parseInt(document.getElementById('inputQuantum').value) || 2;
-      document.getElementById('labelQ').innerText = timeQuantum;
       tasks = [];
-      const shuffled = [...subjectList].sort(() => rng() - 0.5);
-      for (let i = 1; i <= numTasks; i++) {
-        tasks.push({ id: `P${i}`, name: shuffled[i-1], at: Math.floor(rng() * 11), bt: Math.floor(rng() * 8) + 1 });
-      }
-      if (!tasks.some(t => t.at === 0)) tasks[0].at = 0;
-      renderTaskTable();
-      calculateAllAlgorithms();
+      for(let i=1; i<=num; i++) { tasks.push({ id: `P${i}`, name: subjectList[i-1], at: Math.floor(rng()*6), bt: Math.floor(rng()*5)+1 }); }
+      if(!tasks.some(t => t.at === 0)) tasks[0].at = 0;
+      document.getElementById('taskTableBody').innerHTML = tasks.map(t=>`<tr><td class="p-3 font-bold text-brand-600">${t.id}</td><td class="p-3">${t.name}</td><td class="p-3">${t.at}</td><td class="p-3">${t.bt}</td></tr>`).join('');
+      calculateAll();
     }
-    function loadBySeed() {
-      const v = parseInt(document.getElementById('inputSeed').value);
-      if (isNaN(v)) { alert('กรุณากรอก Seed'); return; }
-      generateRandomProblem(v);
-    }
-    function updateQuantum() {
-      let q = parseInt(document.getElementById('inputQuantum').value);
-      if (isNaN(q) || q < 1 || q > 4) { alert('Quantum 1-4 เท่านั้น'); document.getElementById('inputQuantum').value = timeQuantum; return; }
-      timeQuantum = q;
-      document.getElementById('labelQ').innerText = timeQuantum;
-      calculateAllAlgorithms();
-    }
-    function renderTaskTable() {
-      document.getElementById('taskTableBody').innerHTML = tasks.map(t => `<tr class="hover:bg-brand-50/40"><td class="p-3 font-bold text-brand-600">${t.id}</td><td class="p-3 font-medium text-slate-800">${t.name}</td><td class="p-3">${t.at}</td><td class="p-3">${t.bt}</td><td class="p-3 text-slate-500">t0 + ${t.at} ชม.</td></tr>`).join('');
-    }
+    function loadBySeed() { let v = parseInt(document.getElementById('inputSeed').value); if(!isNaN(v)) generateRandomProblem(v); }
+    function updateQuantum() { timeQuantum = parseInt(document.getElementById('inputQuantum').value)||2; calculateAll(); }
+    
     function runFCFS() {
-      let sorted = [...tasks].sort((a,b) => a.at - b.at || a.id.localeCompare(b.id, undefined, {numeric: true})), time = 0, gantt = [], results = [];
-      sorted.forEach(p => {
-        if (time < p.at) { gantt.push({ id: 'Idle', start: time, end: p.at }); time = p.at; }
-        let start = time; time += p.bt; let end = time;
-        gantt.push({ id: p.id, start, end });
+      let s = [...tasks].sort((a,b)=>a.at-b.at), t=0, gantt=[], res=[];
+      s.forEach(p => {
+        if(t < p.at) { gantt.push({id:'Idle', start:t, end:p.at}); t=p.at; }
+        let start = t; t += p.bt; let end = t;
+        gantt.push({id:p.id, start, end});
         let ct = end, tat = ct - p.at, wt = tat - p.bt;
-        results.push({ id: p.id, at: p.at, bt: p.bt, ct, tat, wt });
+        res.push({id:p.id, at:p.at, bt:p.bt, ct, tat, wt});
       });
-      return { gantt, results };
+      return { gantt, results: res };
     }
     function runSJF() {
-      let rem = tasks.map(t => ({...t})), time = 0, gantt = [], results = [];
-      while (rem.length > 0) {
-        let avail = rem.filter(p => p.at <= time);
-        if (avail.length === 0) { let nextA = Math.min(...rem.map(p => p.at)); gantt.push({ id: 'Idle', start: time, end: nextA }); time = nextA; continue; }
-        avail.sort((a,b) => a.bt - b.bt || a.at - b.at || a.id.localeCompare(b.id, undefined, {numeric: true}));
-        let chosen = avail[0], start = time; time += chosen.bt; let end = time;
-        gantt.push({ id: chosen.id, start, end });
+      let rem = tasks.map(t=>({...t})), t=0, gantt=[], res=[];
+      while(rem.length > 0) {
+        let avail = rem.filter(p => p.at <= t);
+        if(avail.length === 0) { let nextA = Math.min(...rem.map(p=>p.at)); gantt.push({id:'Idle', start:t, end:nextA}); t=nextA; continue; }
+        avail.sort((a,b)=>a.bt-b.bt||a.at-b.at);
+        let chosen = avail[0], start = t; t += chosen.bt; let end = t;
+        gantt.push({id:chosen.id, start, end});
         let ct = end, tat = ct - chosen.at, wt = tat - chosen.bt;
-        results.push({ id: chosen.id, at: chosen.at, bt: chosen.bt, ct, tat, wt });
-        rem = rem.filter(p => p.id !== chosen.id);
+        res.push({id:chosen.id, at:chosen.at, bt:chosen.bt, ct, tat, wt});
+        rem = rem.filter(p=>p.id !== chosen.id);
       }
-      return { gantt, results };
+      return { gantt, results: res };
     }
-    function runRoundRobin(q) {
-      let pool = tasks.map(t => ({...t, remainingBT: t.bt})), time = 0, queue = [], gantt = [], completed = [];
-      pool.filter(t => t.at <= time).forEach(t => queue.push(t));
-      while (completed.length < tasks.length) {
-        if (queue.length === 0) {
-          let unarrived = pool.filter(p => !completed.some(c => c.id === p.id));
-          if (unarrived.length > 0) {
-            let nextA = Math.min(...unarrived.map(p => p.at));
-            gantt.push({ id: 'Idle', start: time, end: nextA }); time = nextA;
-            pool.filter(t => t.at <= time && !completed.some(c => c.id === t.id) && !queue.some(qi => qi.id === t.id)).forEach(t => queue.push(t));
-            continue;
-          } else { break; }
+    function runRR(q) {
+      let pool = tasks.map(t=>({...t, rem: t.bt})), t=0, qArr=[], gantt=[], completed=[];
+      pool.filter(p=>p.at<=t).forEach(p=>qArr.push(p));
+      while(completed.length < tasks.length) {
+        if(qArr.length === 0) {
+          let un = pool.filter(p=>!completed.some(c=>c.id===p.id));
+          if(un.length > 0) { let na = Math.min(...un.map(p=>p.at)); gantt.push({id:'Idle', start:t, end:na}); t=na; pool.filter(p=>p.at<=t&&!completed.some(c=>c.id===p.id)&&!qArr.some(q=>q.id===p.id)).forEach(p=>qArr.push(p)); continue; }
+          else break;
         }
-        let current = queue.shift(), runT = Math.min(current.remainingBT, q), start = time; time += runT; let end = time;
-        current.remainingBT -= runT;
-        gantt.push({ id: current.id, start, end });
-        pool.filter(t => t.at > start && t.at <= time && t.id !== current.id && !queue.some(qi => qi.id === t.id) && !completed.some(c => c.id === t.id)).forEach(na => queue.push(na));
-        if (current.remainingBT > 0) { queue.push(current); }
-        else { let ct = end, tat = ct - current.at, wt = tat - current.bt; completed.push({ id: current.id, at: current.at, bt: current.bt, ct, tat, wt }); }
+        let cur = qArr.shift(), runT = Math.min(cur.rem, q), start = t; t += runT; let end = t;
+        cur.rem -= runT; gantt.push({id:cur.id, start, end});
+        pool.filter(p=>p.at>start&&p.at<=t&&p.id!==cur.id&&!qArr.some(q=>q.id===p.id)&&!completed.some(c=>c.id===p.id)).forEach(p=>qArr.push(p));
+        if(cur.rem > 0) qArr.push(cur);
+        else { let ct = end, tat = ct - cur.at, wt = tat - cur.bt; completed.push({id:cur.id, at:cur.at, bt:cur.bt, ct, tat, wt}); }
       }
       return { gantt, results: completed };
     }
-    function calculateAllAlgorithms() {
+    function calculateAll() {
       calculatedData.fcfs = runFCFS();
       calculatedData.sjf = runSJF();
-      calculatedData.rr = runRoundRobin(timeQuantum);
-      updateComparison();
-      renderSelectedAlgorithm();
+      calculatedData.rr = runRR(timeQuantum);
+      renderAlgo();
     }
     function switchAlgoTab(algo) {
       currentAlgoTab = algo;
-      document.getElementById('tabBtnFCFS').className = "px-4 py-1.5 rounded-xl text-xs font-bold " + (algo === 'fcfs' ? "bg-brand-500 text-white shadow-sm" : "bg-white text-slate-600 hover:text-brand-600");
-      document.getElementById('tabBtnSJF').className = "px-4 py-1.5 rounded-xl text-xs font-bold " + (algo === 'sjf' ? "bg-brand-500 text-white shadow-sm" : "bg-white text-slate-600 hover:text-brand-600");
-      document.getElementById('tabBtnRR').className = "px-4 py-1.5 rounded-xl text-xs font-bold " + (algo === 'rr' ? "bg-brand-500 text-white shadow-sm" : "bg-white text-slate-600 hover:text-brand-600");
-      renderSelectedAlgorithm();
+      ['fcfs', 'sjf', 'rr'].forEach(a => document.getElementById('tabBtn'+a.toUpperCase()).className = "px-4 py-1.5 rounded-xl text-xs font-bold " + (algo===a ? "bg-brand-500 text-white shadow-sm" : "bg-white text-slate-600 hover:text-brand-600"));
+      renderAlgo();
     }
-    function renderSelectedAlgorithm() {
-      const data = calculatedData[currentAlgoTab];
-      const titles = { fcfs: 'FCFS', sjf: 'SJF (Non-preemptive)', rr: `Round Robin (q = ${timeQuantum})` };
+    function renderAlgo() {
+      let data = calculatedData[currentAlgoTab];
+      let titles = { fcfs: 'FCFS', sjf: 'SJF', rr: `Round Robin (q=${timeQuantum})` };
       document.getElementById('algoHeader').innerHTML = `<h4 class="font-bold text-slate-800 text-sm">ผลลัพธ์: ${titles[currentAlgoTab]}</h4>`;
-      document.getElementById('ganttChart').innerHTML = data.gantt.map(b => `<div class="flex flex-col items-center mr-1 mb-2"><div class="h-10 px-3 flex items-center justify-center font-bold text-xs rounded-lg shadow-sm ${b.id === 'Idle' ? 'bg-slate-200 text-slate-500' : 'bg-brand-500 text-white'}">${b.id}</div><div class="flex justify-between w-full text-[10px] text-slate-400 mt-1 px-0.5"><span>${b.start}</span><span>${b.end}</span></div></div>`).join('');
-      let sorted = [...data.results].sort((a,b) => a.id.localeCompare(b.id, undefined, {numeric: true}));
-      document.getElementById('algoResultTable').innerHTML = sorted.map(r => `<tr class="hover:bg-slate-50"><td class="p-3 font-bold text-brand-600">${r.id}</td><td class="p-3">${r.at}</td><td class="p-3">${r.bt}</td><td class="p-3 font-bold text-slate-800">${r.ct}</td><td class="p-3">${r.tat}</td><td class="p-3 font-bold text-emerald-600">${r.wt}</td></tr>`).join('');
-      document.getElementById('avgTATLabel').innerText = `${(sorted.reduce((a,c)=>a+c.tat,0)/sorted.length).toFixed(2)} หน่วยเวลา`;
-      document.getElementById('avgWTLabel').innerText = `${(sorted.reduce((a,c)=>a+c.wt,0)/sorted.length).toFixed(2)} หน่วยเวลา`;
-    }
-    function updateComparison() {
-      const getAvg = res => ({ tat: (res.reduce((a,b)=>a+b.tat,0)/res.length).toFixed(2), wt: (res.reduce((a,b)=>a+b.wt,0)/res.length).toFixed(2) });
-      let f = getAvg(calculatedData.fcfs.results), s = getAvg(calculatedData.sjf.results), r = getAvg(calculatedData.rr.results);
-      document.getElementById('cmpFcfsTAT').innerText = f.tat; document.getElementById('cmpFcfsWT').innerText = f.wt;
-      document.getElementById('cmpSjfTAT').innerText = s.tat; document.getElementById('cmpSjfWT').innerText = s.wt;
-      document.getElementById('cmpRrTAT').innerText = r.tat; document.getElementById('cmpRrWT').innerText = r.wt;
-      let maxW = Math.max(parseFloat(f.wt), parseFloat(s.wt), parseFloat(r.wt), 1);
-      document.getElementById('barFcfs').style.width = `${(parseFloat(f.wt)/maxW)*100}%`; document.getElementById('barLabelFcfs').innerText = `${f.wt} หน่วย`;
-      document.getElementById('barSjf').style.width = `${(parseFloat(s.wt)/maxW)*100}%`; document.getElementById('barLabelSjf').innerText = `${s.wt} หน่วย`;
-      document.getElementById('barRr').style.width = `${(parseFloat(r.wt)/maxW)*100}%`; document.getElementById('barLabelRr').innerText = `${r.wt} หน่วย`;
+      document.getElementById('ganttChart').innerHTML = data.gantt.map(b => `<div class="flex flex-col items-center mr-1 mb-2"><div class="h-10 px-3 flex items-center justify-center font-bold text-xs rounded-lg shadow-sm ${b.id==='Idle'?'bg-slate-200 text-slate-500':'bg-brand-500 text-white'}">${b.id}</div><div class="flex justify-between w-full text-[10px] text-slate-400 mt-1"><span>${b.start}</span><span>${b.end}</span></div></div>`).join('');
+      let sorted = [...data.results].sort((a,b)=>a.id.localeCompare(b.id, undefined, {numeric:true}));
+      document.getElementById('algoResultTable').innerHTML = sorted.map(r => `<tr><td class="p-3 font-bold text-brand-600">${r.id}</td><td class="p-3">${r.at}</td><td class="p-3">${r.bt}</td><td class="p-3 font-bold">${r.ct}</td><td class="p-3">${r.tat}</td><td class="p-3 font-bold text-emerald-600">${r.wt}</td></tr>`).join('');
+      document.getElementById('avgTATLabel').innerText = `${(sorted.reduce((a,c)=>a+c.tat,0)/sorted.length).toFixed(2)} หน่วย`;
+      document.getElementById('avgWTLabel').innerText = `${(sorted.reduce((a,c)=>a+c.wt,0)/sorted.length).toFixed(2)} หน่วย`;
     }
 
-    getUsersDB();
-    updateAuthUI();
-    renderBooks();
-    generateRandomProblem(101);
+    getUsersDB(); getBooksDB(); updateAuthUI(); renderBooks();
   </script>
 </body>
 </html>
