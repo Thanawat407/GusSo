@@ -60,7 +60,7 @@
         </div>
       </div>
 
-      <!-- แถบสลับหน้า -->
+      <!-- แถบสลับหน้า (ซ่อนปุ่ม Admin ไว้โดยค่าเริ่มต้น จะแสดงเฉพาะเมื่อ Admin ล็อกอิน) -->
       <div class="flex items-center space-x-2">
         <button id="navStore" onclick="switchView('store')" class="px-3 sm:px-4 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition bg-white text-brand-600 shadow-sm">หน้าร้าน E-book</button>
         <button id="navMyOrders" onclick="switchView('myOrders')" class="hidden px-3 sm:px-4 py-1.5 rounded-lg text-xs sm:text-sm font-semibold text-slate-600 hover:text-brand-600 transition">📦 ประวัติคำสั่งซื้อของฉัน</button>
@@ -96,9 +96,7 @@
   <!-- Main Container -->
   <main class="max-w-7xl mx-auto px-4 py-6 flex-1 w-full">
 
-    <!-- ========================================== -->
-    <!-- VIEW 1: หน้าร้าน E-Book (Storefront)       -->
-    <!-- ========================================== -->
+    <!-- VIEW 1: หน้าร้าน E-Book -->
     <section id="viewStore">
       <div class="bg-gradient-to-r from-brand-500 via-sky-400 to-brand-600 rounded-3xl p-6 sm:p-8 text-white mb-6 shadow-md flex flex-col md:flex-row justify-between items-center gap-4">
         <div>
@@ -108,7 +106,6 @@
         </div>
       </div>
 
-      <!-- ค้นหาและหมวดหมู่ -->
       <div class="flex flex-col sm:flex-row gap-3 mb-6">
         <input type="text" id="searchInput" oninput="renderBooks()" placeholder="ค้นหาชื่อ E-book หรือผู้แต่ง..." class="flex-1 px-4 py-2.5 bg-white border border-brand-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-400 text-sm">
         <select id="categoryFilter" onchange="renderBooks()" class="px-4 py-2.5 bg-white border border-brand-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-400 text-sm font-medium">
@@ -123,9 +120,7 @@
       <div id="bookGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"></div>
     </section>
 
-    <!-- ========================================== -->
-    <!-- VIEW 2: ประวัติคำสั่งซื้อของฉัน (My Orders) -->
-    <!-- ========================================== -->
+    <!-- VIEW 2: ประวัติคำสั่งซื้อของฉัน -->
     <section id="viewMyOrders" class="hidden space-y-6">
       <div class="bg-white rounded-3xl p-6 border border-brand-200 shadow-sm">
         <h2 class="text-2xl font-bold text-slate-800">📦 ประวัติคำสั่งซื้อและลิงก์ดาวน์โหลดของฉัน</h2>
@@ -134,9 +129,7 @@
       <div id="myOrdersList" class="space-y-4"></div>
     </section>
 
-    <!-- ========================================== -->
-    <!-- VIEW 3: หลังบ้าน (Admin Management Panel)  -->
-    <!-- ========================================== -->
+    <!-- VIEW 3: หลังบ้าน (Admin Management Panel) -->
     <section id="viewAdmin" class="hidden space-y-6">
       <div class="bg-white rounded-3xl p-6 border border-brand-200 shadow-sm flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
@@ -329,11 +322,7 @@
 
   </main>
 
-  <!-- ========================================== -->
-  <!-- MODALS                                     -->
-  <!-- ========================================== -->
-
-  <!-- โมดอลรายละเอียดหนังสือ (ปรับเนื้อหายาวและชัดเจนขึ้นตามโจทย์) -->
+  <!-- MODALS -->
   <div id="bookDetailModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 no-print">
     <div class="bg-white rounded-3xl max-w-xl w-full p-6 shadow-2xl relative max-h-[90vh] overflow-y-auto">
       <button onclick="closeBookDetail()" class="absolute top-5 right-5 text-slate-400 hover:text-slate-600 text-2xl leading-none">&times;</button>
@@ -365,7 +354,6 @@
     </div>
   </div>
 
-  <!-- โมดอลเพิ่ม/แก้ไขหนังสือสำหรับ Admin -->
   <div id="bookFormModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 no-print">
     <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl relative">
       <div class="flex justify-between items-center pb-3 border-b mb-4">
@@ -374,47 +362,20 @@
       </div>
       <form onsubmit="handleBookFormSubmit(event)" class="space-y-3 text-xs">
         <input type="hidden" id="editBookId">
-        <div>
-          <label class="block font-semibold text-slate-600 mb-1">ชื่อหนังสือ</label>
-          <input type="text" id="formBookTitle" required class="w-full px-3 py-2 border rounded-xl">
-        </div>
-        <div>
-          <label class="block font-semibold text-slate-600 mb-1">ผู้แต่ง</label>
-          <input type="text" id="formBookAuthor" required class="w-full px-3 py-2 border rounded-xl">
-        </div>
+        <div><label class="block font-semibold text-slate-600 mb-1">ชื่อหนังสือ</label><input type="text" id="formBookTitle" required class="w-full px-3 py-2 border rounded-xl"></div>
+        <div><label class="block font-semibold text-slate-600 mb-1">ผู้แต่ง</label><input type="text" id="formBookAuthor" required class="w-full px-3 py-2 border rounded-xl"></div>
         <div class="grid grid-cols-2 gap-2">
-          <div>
-            <label class="block font-semibold text-slate-600 mb-1">หมวดหมู่</label>
-            <select id="formBookCat" class="w-full px-3 py-2 border rounded-xl">
-              <option value="วรรณกรรมและนิยาย">วรรณกรรมและนิยาย</option>
-              <option value="จิตวิทยาและพัฒนาตนเอง">จิตวิทยาและพัฒนาตนเอง</option>
-              <option value="เทคโนโลยีและคอมพิวเตอร์">เทคโนโลยีและคอมพิวเตอร์</option>
-              <option value="การเงินและการลงทุน">การเงินและการลงทุน</option>
-            </select>
-          </div>
-          <div>
-            <label class="block font-semibold text-slate-600 mb-1">ราคา (บาท)</label>
-            <input type="number" id="formBookPrice" required min="1" step="0.5" class="w-full px-3 py-2 border rounded-xl">
-          </div>
+          <div><label class="block font-semibold text-slate-600 mb-1">หมวดหมู่</label><select id="formBookCat" class="w-full px-3 py-2 border rounded-xl"><option value="วรรณกรรมและนิยาย">วรรณกรรมและนิยาย</option><option value="จิตวิทยาและพัฒนาตนเอง">จิตวิทยาและพัฒนาตนเอง</option><option value="เทคโนโลยีและคอมพิวเตอร์">เทคโนโลยีและคอมพิวเตอร์</option><option value="การเงินและการลงทุน">การเงินและการลงทุน</option></select></div>
+          <div><label class="block font-semibold text-slate-600 mb-1">ราคา (บาท)</label><input type="number" id="formBookPrice" required min="1" step="0.5" class="w-full px-3 py-2 border rounded-xl"></div>
         </div>
-        <div>
-          <label class="block font-semibold text-slate-600 mb-1">ลิงก์รูปภาพปก (เช่น images/magic1.jpg)</label>
-          <input type="text" id="formBookCover" required value="images/magic1.jpg" class="w-full px-3 py-2 border rounded-xl">
-        </div>
-        <div>
-          <label class="block font-semibold text-slate-600 mb-1">เรื่องย่อ</label>
-          <textarea id="formBookSynopsis" rows="2" required class="w-full px-3 py-2 border rounded-xl"></textarea>
-        </div>
-        <div>
-          <label class="block font-semibold text-slate-600 mb-1">จุดเด่น/หัวข้อ (คั่นด้วยเครื่องหมายจุลภาค ,)</label>
-          <input type="text" id="formBookHighlights" required placeholder="เช่น แฟนตาซี, เวทมนตร์, ผจญภัย" class="w-full px-3 py-2 border rounded-xl">
-        </div>
+        <div><label class="block font-semibold text-slate-600 mb-1">ลิงก์รูปภาพปก (เช่น images/magic1.jpg)</label><input type="text" id="formBookCover" required value="images/magic1.jpg" class="w-full px-3 py-2 border rounded-xl"></div>
+        <div><label class="block font-semibold text-slate-600 mb-1">เรื่องย่อ</label><textarea id="formBookSynopsis" rows="2" required class="w-full px-3 py-2 border rounded-xl"></textarea></div>
+        <div><label class="block font-semibold text-slate-600 mb-1">จุดเด่น/หัวข้อ (คั่นด้วยเครื่องหมายจุลภาค ,)</label><input type="text" id="formBookHighlights" required placeholder="เช่น แฟนตาซี, เวทมนตร์, ผจญภัย" class="w-full px-3 py-2 border rounded-xl"></div>
         <button type="submit" class="w-full py-3 bg-brand-500 hover:bg-brand-600 text-white font-bold rounded-xl shadow mt-2">บันทึกข้อมูลหนังสือ</button>
       </form>
     </div>
   </div>
 
-  <!-- โมดอล Auth (Login / Register / Forgot) -->
   <div id="authModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 no-print">
     <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl">
       <div class="flex justify-between items-center pb-3 border-b border-slate-100">
@@ -422,87 +383,61 @@
         <button onclick="closeAuthModal()" class="text-slate-400 hover:text-slate-600 text-2xl leading-none">&times;</button>
       </div>
 
-      <!-- ฟอร์มเข้าสู่ระบบ -->
       <form id="formLogin" onsubmit="handleLoginSubmit(event)" class="space-y-4 pt-4">
+        <div><label class="block text-xs font-semibold text-slate-600 mb-1">อีเมล</label><input type="email" id="loginEmail" required placeholder="name@example.com" class="w-full px-3.5 py-2 border border-slate-200 rounded-xl text-sm"></div>
         <div>
-          <label class="block text-xs font-semibold text-slate-600 mb-1">อีเมล</label>
-          <input type="email" id="loginEmail" required placeholder="name@example.com" class="w-full px-3.5 py-2 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-brand-400 focus:outline-none">
-        </div>
-        <div>
-          <div class="flex justify-between items-center mb-1">
-            <label class="block text-xs font-semibold text-slate-600">รหัสผ่าน</label>
-            <a href="javascript:switchAuthMode('forgot')" class="text-[11px] text-brand-600 hover:underline">ลืมรหัสผ่าน?</a>
-          </div>
+          <div class="flex justify-between items-center mb-1"><label class="block text-xs font-semibold text-slate-600">รหัสผ่าน</label><a href="javascript:switchAuthMode('forgot')" class="text-[11px] text-brand-600 hover:underline">ลืมรหัสผ่าน?</a></div>
           <div class="relative">
-            <input type="password" id="loginPassword" required placeholder="••••••••" class="w-full px-3.5 py-2 pr-10 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-brand-400 focus:outline-none">
-            <button type="button" onclick="togglePasswordVisibility('loginPassword', 'eyeIconLogin')" class="absolute right-3 top-2.5 text-slate-400 hover:text-slate-600 text-sm focus:outline-none">
-              <span id="eyeIconLogin">👁️</span>
-            </button>
+            <input type="password" id="loginPassword" required placeholder="••••••••" class="w-full px-3.5 py-2 pr-10 border border-slate-200 rounded-xl text-sm">
+            <button type="button" onclick="togglePasswordVisibility('loginPassword', 'eyeIconLogin')" class="absolute right-3 top-2.5 text-slate-400"><span id="eyeIconLogin">👁️</span></button>
           </div>
         </div>
-        <button type="submit" class="w-full py-2.5 bg-brand-500 hover:bg-brand-600 text-white rounded-xl text-sm font-semibold shadow transition">เข้าสู่ระบบ</button>
+        <button type="submit" class="w-full py-2.5 bg-brand-500 hover:bg-brand-600 text-white rounded-xl text-sm font-semibold shadow">เข้าสู่ระบบ</button>
         <p class="text-center text-xs text-slate-500">ยังไม่มีบัญชีใช่หรือไม่? <a href="javascript:switchAuthMode('register')" class="text-brand-600 font-semibold hover:underline">สมัครสมาชิกใหม่</a></p>
       </form>
 
-      <!-- ฟอร์มสมัครสมาชิก -->
       <form id="formRegister" onsubmit="handleRegisterSubmit(event)" class="space-y-3 pt-4 hidden">
-        <div>
-          <label class="block text-xs font-semibold text-slate-600 mb-1">ชื่อผู้ใช้งาน</label>
-          <input type="text" id="regName" required placeholder="ชื่อ-นามสกุล" class="w-full px-3.5 py-2 border border-slate-200 rounded-xl text-sm">
-        </div>
-        <div>
-          <label class="block text-xs font-semibold text-slate-600 mb-1">อีเมลจริง</label>
-          <input type="email" id="regEmail" required placeholder="your.real.email@gmail.com" class="w-full px-3.5 py-2 border border-slate-200 rounded-xl text-sm">
-        </div>
+        <div><label class="block text-xs font-semibold text-slate-600 mb-1">ชื่อผู้ใช้งาน</label><input type="text" id="regName" required placeholder="ชื่อ-นามสกุล" class="w-full px-3.5 py-2 border rounded-xl text-sm"></div>
+        <div><label class="block text-xs font-semibold text-slate-600 mb-1">อีเมลจริง</label><input type="email" id="regEmail" required placeholder="your.real.email@gmail.com" class="w-full px-3.5 py-2 border rounded-xl text-sm"></div>
         <div>
           <label class="block text-xs font-semibold text-slate-600 mb-1">รหัสผ่าน</label>
           <div class="relative">
-            <input type="password" id="regPassword" required placeholder="อย่างน้อย 6 ตัว" minlength="6" class="w-full px-3.5 py-2 pr-10 border border-slate-200 rounded-xl text-sm">
-            <button type="button" onclick="togglePasswordVisibility('regPassword', 'eyeIconReg')" class="absolute right-3 top-2.5 text-slate-400">
-              <span id="eyeIconReg">👁️</span>
-            </button>
+            <input type="password" id="regPassword" required placeholder="อย่างน้อย 6 ตัว" minlength="6" class="w-full px-3.5 py-2 pr-10 border rounded-xl text-sm">
+            <button type="button" onclick="togglePasswordVisibility('regPassword', 'eyeIconReg')" class="absolute right-3 top-2.5 text-slate-400"><span id="eyeIconReg">👁️</span></button>
           </div>
         </div>
-        <button type="submit" class="w-full py-2.5 bg-brand-500 hover:bg-brand-600 text-white rounded-xl text-sm font-semibold shadow transition">สร้างบัญชี</button>
-        <p class="text-center text-xs text-slate-500">มีบัญชีแล้ว? <a href="javascript:switchAuthMode('login')" class="text-brand-600 font-semibold hover:underline">เข้าสู่ระบบ</a></p>
+        <button type="submit" class="w-full py-2.5 bg-brand-500 text-white rounded-xl text-sm font-semibold shadow">สร้างบัญชี</button>
+        <p class="text-center text-xs text-slate-500">มีบัญชีแล้ว? <a href="javascript:switchAuthMode('login')" class="text-brand-600 hover:underline">เข้าสู่ระบบ</a></p>
       </form>
 
-      <!-- ฟอร์มลืมรหัสผ่าน -->
       <form id="formForgot" onsubmit="handleForgotSubmit(event)" class="space-y-4 pt-4 hidden">
         <p class="text-xs text-slate-500">กรอกอีเมลของคุณเพื่อรับลิงก์รีเซ็ตรหัสผ่าน</p>
-        <input type="email" id="forgotEmail" required placeholder="name@example.com" class="w-full px-3.5 py-2 border border-slate-200 rounded-xl text-sm">
+        <input type="email" id="forgotEmail" required placeholder="name@example.com" class="w-full px-3.5 py-2 border rounded-xl text-sm">
         <button type="submit" id="btnForgotSubmit" class="w-full py-2.5 bg-brand-500 text-white rounded-xl text-sm font-semibold shadow">ส่งลิงก์รีเซ็ตรหัสผ่าน</button>
         <p class="text-center text-xs text-slate-500"><a href="javascript:switchAuthMode('login')" class="text-brand-600 hover:underline">กลับไปเข้าสู่ระบบ</a></p>
       </form>
     </div>
   </div>
 
-  <!-- โมดอลตะกร้าสินค้า -->
   <div id="cartModal" class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 hidden flex justify-end no-print">
     <div class="bg-white w-full max-w-md h-full p-6 flex flex-col shadow-2xl">
       <div class="flex justify-between items-center pb-4 border-b">
         <h3 class="text-lg font-bold text-slate-800">ตะกร้าสินค้าของฉัน</h3>
-        <button onclick="closeCart()" class="text-slate-400 hover:text-slate-600 text-2xl">&times;</button>
+        <button onclick="closeCart()" class="text-slate-400 text-2xl">&times;</button>
       </div>
       <div id="cartList" class="flex-1 overflow-y-auto py-4 space-y-3"></div>
       <div class="pt-4 border-t space-y-3">
-        <div class="flex justify-between text-base font-bold">
-          <span>ยอดรวมทั้งสิ้น:</span>
-          <span id="cartTotal" class="text-brand-600">฿0.00</span>
-        </div>
+        <div class="flex justify-between text-base font-bold"><span>ยอดรวมทั้งสิ้น:</span><span id="cartTotal" class="text-brand-600">฿0.00</span></div>
         <button onclick="openCheckout()" class="w-full py-3 bg-brand-500 hover:bg-brand-600 text-white font-bold rounded-xl shadow">สั่งซื้อและชำระเงิน (PromptPay)</button>
       </div>
     </div>
   </div>
 
-  <!-- โมดอล PromptPay -->
   <div id="checkoutModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 no-print">
     <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl text-center">
       <h3 class="text-lg font-bold text-slate-800">สแกนชำระเงินด้วย PromptPay</h3>
       <div class="my-4 p-4 bg-brand-50 border rounded-2xl inline-block">
-        <svg class="w-40 h-40 mx-auto" viewBox="0 0 100 100" fill="currentColor">
-          <rect x="10" y="10" width="25" height="25" fill="#0369a1"/><rect x="65" y="10" width="25" height="25" fill="#0369a1"/><rect x="10" y="65" width="25" height="25" fill="#0369a1"/>
-        </svg>
+        <svg class="w-40 h-40 mx-auto" viewBox="0 0 100 100" fill="currentColor"><rect x="10" y="10" width="25" height="25" fill="#0369a1"/><rect x="65" y="10" width="25" height="25" fill="#0369a1"/><rect x="10" y="65" width="25" height="25" fill="#0369a1"/></svg>
       </div>
       <div class="text-lg font-bold text-brand-600 mb-4" id="payAmountLabel">ยอดชำระ: ฿0.00</div>
       <div class="flex gap-2">
@@ -515,8 +450,8 @@
   <!-- JAVASCRIPT LOGIC -->
   <script>
     function togglePasswordVisibility(inputId, iconId) {
-      const input = document.getElementById(inputId);
-      const icon = document.getElementById(iconId);
+      let input = document.getElementById(inputId);
+      let icon = document.getElementById(iconId);
       if (input.type === 'password') { input.type = 'text'; icon.innerText = '🙈'; }
       else { input.type = 'password'; icon.innerText = '👁️'; }
     }
@@ -586,12 +521,14 @@
         navMyOrders.classList.remove('hidden');
         document.getElementById('currentUserLabel').innerText = user.name;
         document.getElementById('currentEmailLabel').innerText = user.email;
+
         if (isAdminUser(user)) {
           navAdmin.classList.remove('hidden');
           adminBadge.classList.remove('hidden');
         } else {
           navAdmin.classList.add('hidden');
           adminBadge.classList.add('hidden');
+          if (currentView === 'admin') switchView('store');
         }
       } else {
         loggedBlock.classList.add('hidden');
