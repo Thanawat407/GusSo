@@ -60,7 +60,7 @@
         </div>
       </div>
 
-      <!-- แถบสลับหน้า (ซ่อนปุ่ม Admin ไว้โดยค่าเริ่มต้น จะแสดงเฉพาะเมื่อ Admin ล็อกอิน) -->
+      <!-- แถบสลับหน้า -->
       <div class="flex items-center space-x-2">
         <button id="navStore" onclick="switchView('store')" class="px-3 sm:px-4 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition bg-white text-brand-600 shadow-sm">หน้าร้าน E-book</button>
         <button id="navMyOrders" onclick="switchView('myOrders')" class="hidden px-3 sm:px-4 py-1.5 rounded-lg text-xs sm:text-sm font-semibold text-slate-600 hover:text-brand-600 transition">📦 ประวัติคำสั่งซื้อของฉัน</button>
@@ -98,12 +98,19 @@
 
     <!-- VIEW 1: หน้าร้าน E-Book -->
     <section id="viewStore">
-      <div class="bg-gradient-to-r from-brand-500 via-sky-400 to-brand-600 rounded-3xl p-6 sm:p-8 text-white mb-6 shadow-md flex flex-col md:flex-row justify-between items-center gap-4">
-        <div>
+      <!-- Banner ปรับปรุงใหม่ ใส่ภาพกราฟิกฝั่งขวาเพิ่มลูกเล่น -->
+      <div class="bg-gradient-to-r from-brand-500 via-sky-400 to-brand-600 rounded-3xl p-6 sm:p-8 text-white mb-6 shadow-md flex flex-col md:flex-row justify-between items-center gap-6 relative overflow-hidden">
+        <div class="z-10 max-w-xl">
           <span class="bg-white/20 text-xs px-3 py-1 rounded-full uppercase tracking-wider font-semibold">GUSSO DIGITAL BOOKSTORE</span>
           <h1 class="text-2xl sm:text-3xl font-bold mt-2 mb-1">คลังหนังสือดิจิทัล GusSo</h1>
           <p class="text-brand-100 text-sm">เลือกซื้อ E-book ส่งตรงถึงบัญชีคุณ พร้อมระบบใบเสร็จดิจิทัล e-Receipt ผ่านทางอีเมลจริง</p>
         </div>
+        <!-- โลโก้หรือภาพกิมมิกฝั่งขวา -->
+        <div class="z-10 shrink-0">
+          <img src="images/banner-logo.png" alt="GusSo Ebook Logo" class="w-36 h-24 sm:w-48 sm:h-32 object-cover rounded-2xl shadow-lg border-2 border-white/30 backdrop-blur-sm bg-white/10 hover:scale-105 transition duration-300">
+        </div>
+        <!-- ตกแต่งแสงเงาพื้นหลังแบนเนอร์ -->
+        <div class="absolute -right-10 -bottom-10 w-48 h-48 bg-white/10 rounded-full blur-2xl pointer-events-none"></div>
       </div>
 
       <div class="flex flex-col sm:flex-row gap-3 mb-6">
@@ -407,14 +414,14 @@
           </div>
         </div>
         <button type="submit" class="w-full py-2.5 bg-brand-500 text-white rounded-xl text-sm font-semibold shadow">สร้างบัญชี</button>
-        <p class="text-center text-xs text-slate-500">มีบัญชีแล้ว? <a href="javascript:switchAuthMode('login')" class="text-brand-600 hover:underline">เข้าสู่ระบบ</a></p>
+        <p class="text-center text-xs text-slate-500">มีบัญชีแล้ว? <a href="javascript:switchAuthMode('login')" class="text-brand-600 font-semibold hover:underline">เข้าสู่ระบบ</a></p>
       </form>
 
       <form id="formForgot" onsubmit="handleForgotSubmit(event)" class="space-y-4 pt-4 hidden">
         <p class="text-xs text-slate-500">กรอกอีเมลของคุณเพื่อรับลิงก์รีเซ็ตรหัสผ่าน</p>
         <input type="email" id="forgotEmail" required placeholder="name@example.com" class="w-full px-3.5 py-2 border rounded-xl text-sm">
         <button type="submit" id="btnForgotSubmit" class="w-full py-2.5 bg-brand-500 text-white rounded-xl text-sm font-semibold shadow">ส่งลิงก์รีเซ็ตรหัสผ่าน</button>
-        <p class="text-center text-xs text-slate-500"><a href="javascript:switchAuthMode('login')" class="text-brand-600 hover:underline">กลับไปเข้าสู่ระบบ</a></p>
+        <p class="text-center text-xs text-slate-500"><a href="javascript:switchAuthMode('login')" class="text-brand-600 font-semibold hover:underline">กลับไปเข้าสู่ระบบ</a></p>
       </form>
     </div>
   </div>
