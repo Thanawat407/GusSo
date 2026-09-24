@@ -98,18 +98,17 @@
 
     <!-- VIEW 1: หน้าร้าน E-Book -->
     <section id="viewStore">
-      <!-- Banner ปรับปรุงใหม่ ใส่ภาพกราฟิกฝั่งขวาเพิ่มลูกเล่น -->
+      <!-- Banner ปรับแต่งใหม่ให้แสดงโลโก้ฝั่งขวาชัดเจน -->
       <div class="bg-gradient-to-r from-brand-500 via-sky-400 to-brand-600 rounded-3xl p-6 sm:p-8 text-white mb-6 shadow-md flex flex-col md:flex-row justify-between items-center gap-6 relative overflow-hidden">
         <div class="z-10 max-w-xl">
           <span class="bg-white/20 text-xs px-3 py-1 rounded-full uppercase tracking-wider font-semibold">GUSSO DIGITAL BOOKSTORE</span>
           <h1 class="text-2xl sm:text-3xl font-bold mt-2 mb-1">คลังหนังสือดิจิทัล GusSo</h1>
           <p class="text-brand-100 text-sm">เลือกซื้อ E-book ส่งตรงถึงบัญชีคุณ พร้อมระบบใบเสร็จดิจิทัล e-Receipt ผ่านทางอีเมลจริง</p>
         </div>
-        <!-- โลโก้หรือภาพกิมมิกฝั่งขวา -->
-        <div class="z-10 shrink-0">
-          <img src="images/banner-logo.png" alt="GusSo Ebook Logo" class="w-36 h-24 sm:w-48 sm:h-32 object-cover rounded-2xl shadow-lg border-2 border-white/30 backdrop-blur-sm bg-white/10 hover:scale-105 transition duration-300">
+        <!-- โลโก้ฝั่งขวา ปรับกรอบและสไตล์ให้เด่นชัด -->
+        <div class="z-10 shrink-0 bg-white/10 p-2 rounded-2xl border border-white/30 backdrop-blur-md shadow-lg">
+          <img src="images/banner-logo.png" alt="GusSo Ebook Logo" class="w-48 sm:w-60 h-28 sm:h-36 object-contain rounded-xl">
         </div>
-        <!-- ตกแต่งแสงเงาพื้นหลังแบนเนอร์ -->
         <div class="absolute -right-10 -bottom-10 w-48 h-48 bg-white/10 rounded-full blur-2xl pointer-events-none"></div>
       </div>
 
@@ -962,7 +961,7 @@
       let sorted = [...data.results].sort((a,b)=>a.id.localeCompare(b.id, undefined, {numeric:true}));
       document.getElementById('algoResultTable').innerHTML = sorted.map(r => `<tr><td class="p-3 font-bold text-brand-600">${r.id}</td><td class="p-3">${r.at}</td><td class="p-3">${r.bt}</td><td class="p-3 font-bold">${r.ct}</td><td class="p-3">${r.tat}</td><td class="p-3 font-bold text-emerald-600">${r.wt}</td></tr>`).join('');
       document.getElementById('avgTATLabel').innerText = `${(sorted.reduce((a,c)=>a+c.tat,0)/sorted.length).toFixed(2)} หน่วย`;
-      document.getElementById('avgWTLabel').innerText = `${(sorted.reduce((a,c)=>a+c.wt,0)/sorted.length).toFixed(2)} หน่วย`;
+      document.getElementById('avgWTLabel').innerText = `${(sorted.reduce((a,c)=>a+c.wt,0)/sorted.length).Rezult = (sorted.reduce((a,c)=>a+c.wt,0)/sorted.length).toFixed(2)} หน่วย`;
     }
 
     getUsersDB(); getBooksDB(); updateAuthUI(); renderBooks();
